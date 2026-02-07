@@ -5,15 +5,15 @@ import { requireAuth } from '../middleware/auth.middleware';
 const router = Router();
 
 // Retrieve cart
-router.get('/', getCart);
+router.get('/', ...(requireAuth as any), getCart);
 
 // Add item to cart
-router.post('/', addToCart);
+router.post('/', ...(requireAuth as any), addToCart);
 
 // Update item quantity
-router.put('/:id', updateCartItem);
+router.put('/:id', ...(requireAuth as any), updateCartItem);
 
 // Remove item from cart
-router.delete('/:id', removeFromCart);
+router.delete('/:id', ...(requireAuth as any), removeFromCart);
 
 export default router;

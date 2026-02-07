@@ -5,7 +5,11 @@ import * as cartDb from '../db/cart';
 // For now, we might need to mock it or expect it in body if auth not fully set up
 const getUserId = (req: Request): number => {
     // @ts-ignore
-    return req.user?.id || 1; // Default to 1 for testing if no auth
+    if (!req.user || !req.user.id) {
+        throw new Error("User not authenticated");
+    }
+    // @ts-ignore
+    return req.user.id;
 };
 
 export const getCart = async (req: Request, res: Response) => {

@@ -5,12 +5,12 @@ import { requireAuth } from '../middleware/auth.middleware';
 const router = Router();
 
 // Create Order (Checkout)
-router.post('/', createOrderController);
+router.post('/', ...(requireAuth as any), createOrderController);
 
 // Get Order History
-router.get('/', getOrdersController);
+router.get('/', ...(requireAuth as any), getOrdersController);
 
 // Get Single Order     
-router.get('/:id', getOrderByIdController);
+router.get('/:id', ...(requireAuth as any), getOrderByIdController);
 
 export default router;

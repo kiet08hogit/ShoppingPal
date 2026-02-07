@@ -3,7 +3,11 @@ import * as orderDb from '../db/orders';
 
 const getUserId = (req: Request): number => {
     // @ts-ignore
-    return req.user?.id || 1;
+    if (!req.user || !req.user.id) {
+        throw new Error("User not authenticated");
+    }
+    // @ts-ignore
+    return req.user.id;
 };
 
 export const createOrderController = async (req: Request, res: Response) => {

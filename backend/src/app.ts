@@ -1,5 +1,6 @@
-import express from 'express';
 import dotenv from 'dotenv';
+dotenv.config();
+import express from 'express';
 import cors from 'cors';
 import authRoutes from './routes/auth.routes';
 import { initDB } from './db/dbinit';
@@ -8,7 +9,6 @@ import cartRoutes from './routes/cart.route';
 import orderRoutes from './routes/order.route';
 import allProductsRoutes from './routes/allproductsroute';
 import userRoutes from './routes/user.route';
-dotenv.config();
 
 
 const app = express();
