@@ -10,7 +10,6 @@ import ClerkSignup from './components/login-signup/ClerkSignup'
 import ClerkLogin from './components/login-signup/ClerkLogin'
 import Checkout1 from './components/payment-checkout/checkOut1';
 import Checkout from './components/payment-checkout/Checkout';
-import CardsDetails from './components/payment-checkout/CardDetails';
 import { Routes, Route } from "react-router-dom"
 import ThankYOu from './components/payment-checkout/thankYou';
 import { SignedIn, SignedOut, RedirectToSignIn } from '@clerk/clerk-react';
@@ -18,7 +17,6 @@ import CopilotWidget from './components/CopilotWidget';
 
 import AboutUs from './components/about/AboutUs';
 
-import AddressModal from './components/AddressModal';
 import Offers from './components/offers/Offers';
 import Orders from './components/orders/Orders';
 import OrderDetail from './components/orders/OrderDetail';
