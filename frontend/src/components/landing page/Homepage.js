@@ -50,7 +50,7 @@ export default function Homepage() {
             <h2>Our Categories</h2>
             <div class="categories-grid">
                 {categories.map((category) => (
-                    <div key={category.id} class="category-card" onClick={() => navigate("/products")}>
+                    <div key={category.slug} class="category-card" onClick={() => navigate(`/products?category=${category.slug}`)}>
                         <img src={category.image} alt={category.name} />
                         <h3>{category.name}</h3>
                     </div>

@@ -2,18 +2,22 @@
     "categories": [
         {
             "name": "Hard Hats",
+            "slug": "hard_hat",
             "image": "/images/hard hat.jpg"
         },
         {
             "name": "Power Tools",
+            "slug": "power_tools",
             "image": "/images/power tools.jpg"
         },
         {
             "name": "Safety Glasses",
+            "slug": "safety_glasses",
             "image": "/images/safety glasses.jpg"
         },
         {
             "name": "Safety Gloves",
+            "slug": "safety_gloves",
             "image": "/images/safety gloves.jpg"
         }
       

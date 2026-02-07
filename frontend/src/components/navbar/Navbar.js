@@ -2,42 +2,51 @@ import React from "react";
 import "../navbar/header.css";
 
 import { useEffect, useState } from 'react'
-import axios from 'axios'
+import { productsAPI } from '../../utils/api';
 
 import { useNavigate } from "react-router-dom";
 import { useUser, useClerk } from "@clerk/clerk-react";
-import { useRef } from "react";export default function Navbar() {
+import { useRef } from "react";
+
+export default function Navbar() {
   let inputRef = useRef()
   const { user, isSignedIn } = useUser();
   const { signOut } = useClerk();
   const navigate = useNavigate()
-  const [filteredData, setFilteredData] = useState([]);
-  const [word, searchWord] = useState("")
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("")
+  const [isSearching, setIsSearching] = useState(false);
 
+  // Helper function to get category slug from product
+  const getCategorySlug = (categoryName) => {
+    if (!categoryName) return '';
+    const lowerCat = categoryName.toLowerCase();
+    if (lowerCat.includes('hard hat')) return 'hard_hat';
+    if (lowerCat.includes('power tool')) return 'power_tools';
+    if (lowerCat.includes('safety glass')) return 'safety_glasses';
+    if (lowerCat.includes('safety glove')) return 'safety_gloves';
+    return '';
+  };
 
-  useEffect(() => {
-    const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
-    axios.get(`${apiUrl}/products`)
-      .then((res) => {
-        console.log(res)
-        setFilteredData(res.data)
-      })
+  const handleSearch = async (query) => {
+    setSearchQuery(query);
+    
+    if (query.trim() === '') {
+      setSearchResults([]);
+      return;
+    }
 
-  }, [])
-
-
-  const handleFilter = (event) => {
-    searchWord(event.target.value)
-    console.log(word)
-
-  }
-  let filteredItems = filteredData.filter((item) => item.typeName && item.typeName
-    .includes(word));
-
-
-  console.log(filteredItems);
-
-  let slicedArr = filteredItems.slice(2,7 );
+    setIsSearching(true);
+    try {
+      const response = await productsAPI.searchProducts(query);
+      setSearchResults(response.data.slice(0, 5)); // Show top 5 results
+    } catch (error) {
+      console.error('Search error:', error);
+      setSearchResults([]);
+    } finally {
+      setIsSearching(false);
+    }
+  };
 
 
   return (
@@ -132,26 +141,36 @@ import { useRef } from "react";export default function Navbar() {
 
             <input
               ref={inputRef}
-              type="text" className="header__searchInput"
+              type="text" 
+              className="header__searchInput"
               placeholder="What are you looking for?"
-              onChange={handleFilter} />
+              onChange={(e) => handleSearch(e.target.value)} 
+            />
 
             <span id="header__searchIcon" className="material-symbols-outlined">search</span>
 
             <div className="final-Data">
               {
-
-                word === "" ? <div></div> :
-                  slicedArr.map((items) => (
-
-
-                    <li className="details" onClick={() => {
-                      navigate(`/products/${items.id}`)
-                      inputRef.current.value = ""
-                      searchWord("")
-                    }}>{items.mainImageAlt}</li>
-
-                  ))
+                searchQuery === "" ? <div></div> :
+                isSearching ? <li className="details">Searching...</li> :
+                searchResults.length === 0 ? <li className="details">No results found</li> :
+                searchResults.map((item) => {
+                  const categorySlug = getCategorySlug(item.category);
+                  return (
+                    <li 
+                      key={item.id}
+                      className="details" 
+                      onClick={() => {
+                        navigate(`/products/${categorySlug}/${item.id}`)
+                        inputRef.current.value = ""
+                        setSearchQuery("")
+                        setSearchResults([])
+                      }}
+                    >
+                      {item.name}
+                    </li>
+                  );
+                })
               }
             </div>
           </div>
