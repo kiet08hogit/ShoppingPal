@@ -2,7 +2,7 @@ import React from "react";
 import "../navbar/header.css";
 
 import { useEffect, useState } from 'react'
-import { productsAPI } from '../../utils/api';
+import { productsAPI, cartAPI } from '../../utils/api';
 
 import { useNavigate } from "react-router-dom";
 import { useUser, useClerk } from "@clerk/clerk-react";
@@ -16,6 +16,35 @@ export default function Navbar() {
   const [searchResults, setSearchResults] = useState([]);
   const [searchQuery, setSearchQuery] = useState("")
   const [isSearching, setIsSearching] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
+
+  const updateCartCount = async () => {
+    if (!isSignedIn) {
+      setCartCount(0);
+      return;
+    }
+    try {
+      const response = await cartAPI.getCart();
+      const items = response.data.items || [];
+      const count = items.reduce((acc, item) => acc + item.quantity, 0);
+      setCartCount(count);
+    } catch (error) {
+      console.error("Error fetching cart count:", error);
+    }
+  };
+
+  useEffect(() => {
+    updateCartCount();
+
+    const handleCartUpdate = () => {
+      updateCartCount();
+    };
+
+    window.addEventListener('cartUpdated', handleCartUpdate);
+    return () => {
+      window.removeEventListener('cartUpdated', handleCartUpdate);
+    };
+  }, [isSignedIn]);
 
   // Helper function to get category slug from product
   const getCategorySlug = (categoryName) => {
@@ -30,7 +59,7 @@ export default function Navbar() {
 
   const handleSearch = async (query) => {
     setSearchQuery(query);
-    
+
     if (query.trim() === '') {
       setSearchResults([]);
       return;
@@ -77,9 +106,9 @@ export default function Navbar() {
                 id="offcanvasWithBothOptionsLabel"
                 style={{ display: "flex", margin: "auto" }}
               >
-                <img 
-                style={{cursor:"pointer", maxWidth: "280px"}}
-                  onClick={()=>{navigate("/")}}
+                <img
+                  style={{ cursor: "pointer", maxWidth: "280px" }}
+                  onClick={() => { navigate("/") }}
                   src="/images/industra-logo.png"
                   alt="INDUSTRA Logo"
                 />
@@ -104,24 +133,26 @@ export default function Navbar() {
                 paddingLeft: "50px"
               }}
             >
-              <h2>Products</h2>
-              <h2>Rooms</h2>
-              <h2>New at INDUSTRA</h2>
+              <h2 style={{ cursor: "pointer" }} onClick={() => {
+                navigate('/products');
+                // Optional: Close the offcanvas menu after clicking
+                const closeBtn = document.querySelector('.btn-close');
+                if (closeBtn) closeBtn.click();
+              }}>Products</h2>
+              <h2 style={{ cursor: "pointer" }} onClick={() => {
+                navigate('/about');
+                const closeBtn = document.querySelector('.btn-close');
+                if (closeBtn) closeBtn.click();
+              }}>About Us</h2>
               <h2>Offers</h2>
               <br />
               <br />
 
-              <h6>Tips and inspirations</h6>
-              <h6>Currently at INDUSTRA</h6>
-              <h6>Track your order</h6>
+              <h6 onClick={() => navigate('/orders')} style={{ cursor: "pointer" }}>Track your order</h6>
               <br />
               <br />
-              <p>Join INDUSTRA Rewards</p>
-              <p>INDUSTRA Restaurant</p>
-              <p>Our stores</p>
-              <p>Design your room</p>
-              <p>Customer service</p>
-              <p>Download the INDUSTRA app</p>
+              <p onClick={() => navigate('/stores')} style={{ cursor: "pointer" }}>Our stores</p>
+              <p onClick={() => navigate('/service')} style={{ cursor: "pointer" }}>Customer service</p>
             </div>
           </div>
           <p>Menu</p>
@@ -130,10 +161,10 @@ export default function Navbar() {
         <div className="image_logo">
 
           <img
-            onClick={()=>{navigate("/")}}
+            onClick={() => { navigate("/") }}
             src="/images/industra-logo.png"
             alt="INDUSTRA Logo"
-            style={{cursor: "pointer", maxHeight: "250px"}}
+            style={{ cursor: "pointer", maxHeight: "250px" }}
           />
         </div>
         <div className="header__search">
@@ -141,10 +172,10 @@ export default function Navbar() {
 
             <input
               ref={inputRef}
-              type="text" 
+              type="text"
               className="header__searchInput"
               placeholder="What are you looking for?"
-              onChange={(e) => handleSearch(e.target.value)} 
+              onChange={(e) => handleSearch(e.target.value)}
             />
 
             <span id="header__searchIcon" className="material-symbols-outlined">search</span>
@@ -152,25 +183,25 @@ export default function Navbar() {
             <div className="final-Data">
               {
                 searchQuery === "" ? <div></div> :
-                isSearching ? <li className="details">Searching...</li> :
-                searchResults.length === 0 ? <li className="details">No results found</li> :
-                searchResults.map((item) => {
-                  const categorySlug = getCategorySlug(item.category);
-                  return (
-                    <li 
-                      key={item.id}
-                      className="details" 
-                      onClick={() => {
-                        navigate(`/products/${categorySlug}/${item.id}`)
-                        inputRef.current.value = ""
-                        setSearchQuery("")
-                        setSearchResults([])
-                      }}
-                    >
-                      {item.name}
-                    </li>
-                  );
-                })
+                  isSearching ? <li className="details">Searching...</li> :
+                    searchResults.length === 0 ? <li className="details">No results found</li> :
+                      searchResults.map((item) => {
+                        const categorySlug = getCategorySlug(item.category);
+                        return (
+                          <li
+                            key={item.id}
+                            className="details"
+                            onClick={() => {
+                              navigate(`/products/${categorySlug}/${item.id}`)
+                              inputRef.current.value = ""
+                              setSearchQuery("")
+                              setSearchResults([])
+                            }}
+                          >
+                            {item.name}
+                          </li>
+                        );
+                      })
               }
             </div>
           </div>
@@ -188,7 +219,7 @@ export default function Navbar() {
           >
             {" "}
             <li className="login-icon">
-              <span className="material-symbols-outlined"> person</span> <span style={{fontWeight:"bolder"}} className="hej">{isSignedIn ? user.firstName?.toUpperCase() : "Log in or sign up"}</span>
+              <span className="material-symbols-outlined"> person</span> <span style={{ fontWeight: "bolder" }} className="hej">{isSignedIn ? user.firstName?.toUpperCase() : "Log in or sign up"}</span>
             </li>
           </button>
 
@@ -221,6 +252,27 @@ export default function Navbar() {
                 }}>{!isSignedIn ? "Login" : "Logout"}</button>
               </div>
               <hr />
+              {isSignedIn && (
+                <div className="user-menu-items">
+                  <div onClick={() => { navigate('/orders'); const closeBtn = document.querySelector('.btn-close'); if (closeBtn) closeBtn.click(); }} className="menu-item">
+                    <span className="material-symbols-outlined">inventory_2</span>
+                    <span>My Orders</span>
+                  </div>
+                  <div onClick={() => { navigate('/profile'); const closeBtn = document.querySelector('.btn-close'); if (closeBtn) closeBtn.click(); }} className="menu-item">
+                    <span className="material-symbols-outlined">location_on</span>
+                    <span>Saved Addresses</span>
+                  </div>
+                  <div onClick={() => { navigate('/wallet'); const closeBtn = document.querySelector('.btn-close'); if (closeBtn) closeBtn.click(); }} className="menu-item">
+                    <span className="material-symbols-outlined">account_balance_wallet</span>
+                    <span>Wallet & Payments</span>
+                  </div>
+                  <div onClick={() => { navigate('/wishlist'); const closeBtn = document.querySelector('.btn-close'); if (closeBtn) closeBtn.click(); }} className="menu-item">
+                    <span className="material-symbols-outlined">favorite</span>
+                    <span>Wishlist</span>
+                  </div>
+                </div>
+              )}
+              <hr />
               <div id="induststraFamily">
                 <h4>Join INDUSTRA Rewards</h4>
                 <span className="material-symbols-outlined">chevron_right</span>
@@ -228,14 +280,16 @@ export default function Navbar() {
               <hr />
             </div>
           </div>
-          <li className="cart-icon">
-            {" "}
+          <li className="cart-icon" style={{ position: "relative" }}>
             <span className="material-symbols-outlined">local_shipping</span>
           </li>
           <li onClick={() => {
             navigate("/cart")
-          }} className="cart-icon">
+          }} className="cart-icon" style={{ position: "relative" }}>
             <span className="material-symbols-outlined">shopping_basket</span>
+            {cartCount > 0 && (
+              <span className="cart-badge">{cartCount}</span>
+            )}
           </li>
         </div>
       </header>
@@ -246,9 +300,8 @@ export default function Navbar() {
 
           navigate('/products')
         }}>Products</li>
-        <li>Rooms</li>
-        <li>New at INDUSTRA</li>
-        <li>Offers</li>
+        <li onClick={() => { navigate('/about') }}>About Us</li>
+        <li onClick={() => { navigate('/offers') }}>Offers</li>
       </div>
     </div>
   );

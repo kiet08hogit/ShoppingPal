@@ -11,9 +11,15 @@ import ClerkLogin from './components/login-signup/ClerkLogin'
 import Checkout1 from './components/payment-checkout/checkOut1';
 import Checkout from './components/payment-checkout/Checkout';
 import CardsDetails from './components/payment-checkout/CardDetails';
-import {Routes,Route} from "react-router-dom"
+import { Routes, Route } from "react-router-dom"
 import ThankYOu from './components/payment-checkout/thankYou';
 import { SignedIn, SignedOut, RedirectToSignIn } from '@clerk/clerk-react';
+import CopilotWidget from './components/CopilotWidget';
+
+import AboutUs from './components/about/AboutUs';
+
+import AddressModal from './components/AddressModal';
+import Offers from './components/offers/Offers';
 
 const ProtectedRoute = ({ children }) => {
   return (
@@ -29,42 +35,44 @@ const ProtectedRoute = ({ children }) => {
 function App() {
   return (
     <div>
-      
-      <Navbar/>
+      <Navbar />
       <Routes >
-        <Route path='/' element = {<Homepage />} />
-        <Route path='/login' element = {<ClerkLogin />} />
-        <Route path='/signup' element = {<ClerkSignup />} />
-        <Route path = '/products' element = {<ProductPage />} />
-        <Route path = "/products/:category/:id" element = {<SingleProduct />} />
-        <Route path = "/cart" element = {
+        <Route path='/' element={<Homepage />} />
+        <Route path='/about' element={<AboutUs />} />
+        <Route path='/login' element={<ClerkLogin />} />
+        <Route path='/signup' element={<ClerkSignup />} />
+        <Route path='/products' element={<ProductPage />} />
+        <Route path="/products/:category/:id" element={<SingleProduct />} />
+        <Route path="/cart" element={
           <ProtectedRoute>
             <Cart />
           </ProtectedRoute>
         } />
-        <Route path='/checkout' element = {
+        <Route path='/checkout' element={
           <ProtectedRoute>
             <Checkout1 />
           </ProtectedRoute>
         } />
-        <Route path = "/checkout2" element = {
+        <Route path="/checkout2" element={
           <ProtectedRoute>
             <Checkout />
           </ProtectedRoute>
         } />
-        <Route path = "/checkout3" element = {
+        <Route path="/checkout3" element={
           <ProtectedRoute>
             <CardsDetails />
           </ProtectedRoute>
         } />
-        <Route path = "/thankyou" element = {
+        <Route path="/thankyou" element={
           <ProtectedRoute>
             <ThankYOu />
           </ProtectedRoute>
         } />
+        <Route path='/offers' element={<Offers />} />
       </Routes>
-      <Footer/>
-      </div>
+      <CopilotWidget />
+      <Footer />
+    </div>
   );
 }
 

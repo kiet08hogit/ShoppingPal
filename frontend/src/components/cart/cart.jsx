@@ -39,6 +39,7 @@ function Cart() {
     async function changeQuantity(value, itemId) {
         try {
             await cartAPI.updateQuantity(itemId, value);
+            window.dispatchEvent(new Event('cartUpdated'));
             await loadCart();
         } catch (error) {
             console.error('Error updating quantity:', error);
@@ -48,6 +49,7 @@ function Cart() {
     async function deleteItem(itemId) {
         try {
             await cartAPI.removeFromCart(itemId);
+            window.dispatchEvent(new Event('cartUpdated'));
             await loadCart();
         } catch (error) {
             console.error('Error removing item:', error);

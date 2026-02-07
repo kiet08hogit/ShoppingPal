@@ -7,6 +7,7 @@ import { requireAuth } from './middleware/auth.middleware';
 import cartRoutes from './routes/cart.route';
 import orderRoutes from './routes/order.route';
 import allProductsRoutes from './routes/allproductsroute';
+import userRoutes from './routes/user.route';
 dotenv.config();
 
 
@@ -21,6 +22,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/products', allProductsRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
+app.use('/api/users', userRoutes);
 
 // Initialize DB
 initDB();
@@ -37,7 +39,7 @@ app.get('/', (req, res) => {
 // PROTECTED ROUTE EXAMPLE
 // app.get('/me', requireAuth, (req: any, res: any) => { ... });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);

@@ -1,0 +1,172 @@
+.offers-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    font-family: 'Noto Sans', sans-serif;
+}
+
+.offers-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.offers-header h1 {
+    font-size: 2.5rem;
+    color: #111;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.offers-header p {
+    font-size: 1.1rem;
+    color: #666;
+}
+
+.offers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-bottom: 80px;
+}
+
+.offer-card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    padding: 30px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.offer-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+}
+
+.offer-icon-wrapper {
+    background-color: #f5f5f5;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.offer-icon {
+    font-size: 40px;
+    color: #0058a3;
+}
+
+.offer-content h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.offer-content p {
+    color: #666;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.offer-code-box {
+    background-color: #f8f9fa;
+    border: 1px dashed #ccc;
+    padding: 10px 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.offer-code-box .code {
+    font-weight: 700;
+    color: #0058a3;
+    letter-spacing: 1px;
+}
+
+.shop-offer-btn {
+    background-color: #0058a3;
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.shop-offer-btn:hover {
+    background-color: #004480;
+}
+
+.newsletter-section {
+    background-color: #111;
+    color: white;
+    padding: 60px 40px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.newsletter-section h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.newsletter-section p {
+    color: #ccc;
+    margin-bottom: 30px;
+}
+
+.input-group {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.input-group input {
+    padding: 12px 20px;
+    border-radius: 25px;
+    border: none;
+    width: 300px;
+    max-width: 100%;
+}
+
+.input-group button {
+    padding: 12px 30px;
+    border-radius: 25px;
+    border: none;
+    background-color: #0058a3;
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.input-group button:hover {
+    background-color: #0077db;
+}
+
+@media (max-width: 768px) {
+    .offers-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .input-group {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .input-group input {
+        width: 100%;
+    }
+}
