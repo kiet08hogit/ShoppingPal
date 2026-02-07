@@ -5,7 +5,7 @@ import { Client } from 'pg';
 import dotenv from 'dotenv';
 import crypto from 'crypto';
 
-dotenv.config({ path: path.join(__dirname, '../../.env') });
+dotenv.config({ path: path.join(__dirname, '../.env') });
 
 if (!process.env.DATABASE_URL) {
     console.error("Error: DATABASE_URL not found in .env");

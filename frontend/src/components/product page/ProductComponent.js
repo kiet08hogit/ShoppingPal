@@ -16,7 +16,16 @@ function ProductComponent({ sort, products, category, price, isPreFiltered = fal
     return '';
   };
 
+  console.log("🎨 ProductComponent render:", {
+    productsCount: products?.length || 0,
+    category,
+    price,
+    sort,
+    isPreFiltered
+  });
+
   if (!products || !Array.isArray(products)) {
+    console.log("⏳ Products not ready yet");
     return <div className="container"><p>Loading products...</p></div>;
   }
 

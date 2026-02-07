@@ -185,13 +185,50 @@ p {
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
   padding: 15px;
   border-radius: 8px;
-  transition: transform 0.2s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   background: #fff;
   cursor: pointer;
+  opacity: 0;
+  animation: fadeInProduct 0.5s ease-out forwards;
+  border: 2px solid transparent;
 }
 
+@keyframes fadeInProduct {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.singleContainer:nth-child(1) { animation-delay: 0.05s; }
+.singleContainer:nth-child(2) { animation-delay: 0.1s; }
+.singleContainer:nth-child(3) { animation-delay: 0.15s; }
+.singleContainer:nth-child(4) { animation-delay: 0.2s; }
+.singleContainer:nth-child(5) { animation-delay: 0.25s; }
+.singleContainer:nth-child(6) { animation-delay: 0.3s; }
+.singleContainer:nth-child(7) { animation-delay: 0.35s; }
+.singleContainer:nth-child(8) { animation-delay: 0.4s; }
+.singleContainer:nth-child(9) { animation-delay: 0.45s; }
+.singleContainer:nth-child(10) { animation-delay: 0.5s; }
+.singleContainer:nth-child(11) { animation-delay: 0.55s; }
+.singleContainer:nth-child(12) { animation-delay: 0.6s; }
+
 .singleContainer:hover {
-  transform: translateY(-5px);
+  transform: translateY(-10px) scale(1.05);
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 8px 24px;
+  border: 2px solid #0058a3;
+}
+
+.singleContainer img {
+  transition: transform 0.3s ease;
+}
+
+.singleContainer:hover img {
+  transform: scale(1.08);
 }
 
 @media screen and (max-width: 1100px) {

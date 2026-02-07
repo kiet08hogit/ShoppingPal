@@ -67,16 +67,23 @@ function SingleProduct() {
     }, [id, category])
 
     async function addToCart() {
-        if (!isauth) return;
+        if (!isauth) {
+            console.log("❌ User not authenticated");
+            return;
+        }
 
         setAddingToCart(true);
+        console.log("🛒 Adding to cart:", { productId: obj.id, category, quantity });
+        
         try {
-            // Determine category slug from the URL params
-            await cartAPI.addToCart(obj.id, category, quantity);
+            const response = await cartAPI.addToCart(obj.id, category, quantity);
+            console.log("✅ Added to cart successfully:", response.data);
             window.dispatchEvent(new Event('cartUpdated'));
             setAvail(false);
         } catch (error) {
-            console.error('Error adding to cart:', error);
+            console.error('❌ Error adding to cart:', error);
+            console.error('Error response:', error.response?.data);
+            console.error('Error status:', error.response?.status);
             if (error.response?.status === 409) {
                 setAvail(true);
             }
