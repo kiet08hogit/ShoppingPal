@@ -1,0 +1,105 @@
+.Parent1{
+}
+.Parent1>p{
+    margin-left: 10%;
+}
+*{
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.productImg1{
+    display: flex;
+    width: 100%;
+}
+.productImg1>img{
+    width: 380px;
+    height: 380px;
+}
+.Container1{
+    width: 85%;
+    margin: auto;
+    gap: 50px;
+    margin-top: 70px;
+    display: grid;
+    grid-template-columns: 5fr 3fr;
+}
+.checkin1{
+    border: 1px solid rgb(222, 221, 221);
+    height: 50px;
+    border-radius: 10px;
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    align-items: center;
+    padding-top: 10px;
+}
+.pinCheck1{
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    margin-top: 20px;
+    margin-left: -8px;
+}
+.pinCheck1>input{
+    border: none;
+    width: 65%;
+    border-bottom: 2px solid black;
+    font-size: 17px;
+    outline: none;
+}
+.pinCheck1>button{
+    border: none;
+    border-radius: 17px;
+    background-color: black;
+    color: white;
+    padding: 8px 15px;
+    cursor: pointer;
+}
+.pinCheck1>button:hover{
+    background-color: rgb(40, 40, 40);
+}
+.delivey1{
+    display: flex;
+    gap: 20px;
+    align-items:center;
+}
+.abc1{
+    display: flex;
+    align-items: center;
+}
+.addToCart1{
+    width: 100%;
+    margin: auto;
+    padding: 13px;
+    border: none;
+    background-color: rgb(27, 106, 151);
+    color: white;
+    font-size: 20px;
+    font-weight: bolder;
+    border-radius: 28px;
+    cursor: pointer;
+}
+.addToCart1:hover{
+    background-color: rgb(19, 80, 116);
+}
+.siderRight{
+    height: 220px;
+    background-color: rgb(3, 80, 152)
+}
+*{
+    font-family: Arial, Helvetica, sans-serif;
+}
+.sidebarText1{
+    color: white;
+    margin-left: 15%;
+    font-weight: bolder;
+}
+.sidebarText1>a{
+    color: white;
+}
+
+.about1{
+    margin-top: 50px;
+    font-size: 22px;
+    color: rgb(77, 76, 76);
+}
