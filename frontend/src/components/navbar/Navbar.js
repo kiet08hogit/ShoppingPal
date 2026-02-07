@@ -40,16 +40,30 @@ export default function Navbar() {
       updateCartCount();
     };
 
+    const handleCartIncrement = (event) => {
+      setCartCount(prev => prev + (event.detail?.quantity || 1));
+    };
+
     window.addEventListener('cartUpdated', handleCartUpdate);
+    window.addEventListener('cartCountIncrement', handleCartIncrement);
+
     return () => {
       window.removeEventListener('cartUpdated', handleCartUpdate);
+      window.removeEventListener('cartCountIncrement', handleCartIncrement);
     };
   }, [isSignedIn]);
 
-  // Helper function to get category slug from product
   const getCategorySlug = (categoryName) => {
     if (!categoryName) return '';
     const lowerCat = categoryName.toLowerCase();
+
+    // If already in slug format, return as-is
+    if (lowerCat === 'hard_hat' || lowerCat === 'power_tools' ||
+      lowerCat === 'safety_glasses' || lowerCat === 'safety_gloves') {
+      return lowerCat;
+    }
+
+    // Otherwise, convert from display name to slug
     if (lowerCat.includes('hard hat')) return 'hard_hat';
     if (lowerCat.includes('power tool')) return 'power_tools';
     if (lowerCat.includes('safety glass')) return 'safety_glasses';
@@ -68,7 +82,7 @@ export default function Navbar() {
     setIsSearching(true);
     try {
       const response = await productsAPI.searchProducts(query);
-      setSearchResults(response.data.slice(0, 5)); // Show top 5 results
+      setSearchResults(response.data.slice(0, 5));
     } catch (error) {
       console.error('Search error:', error);
       setSearchResults([]);
@@ -152,9 +166,17 @@ export default function Navbar() {
               <br />
               <br />
 
-              <h6 onClick={() => navigate('/orders')} style={{ cursor: "pointer" }}>Reorder</h6>
+              <h2 onClick={() => {
+                navigate('/orders');
+                const closeBtn = document.querySelector('.btn-close');
+                if (closeBtn) closeBtn.click();
+              }} style={{ cursor: "pointer" }}>Reorder</h2>
               <br />
-              <h6 onClick={() => navigate('/orders')} style={{ cursor: "pointer" }}>Track your order</h6>
+              <h2 onClick={() => {
+                navigate('/orders');
+                const closeBtn = document.querySelector('.btn-close');
+                if (closeBtn) closeBtn.click();
+              }} style={{ cursor: "pointer" }}>Track your order</h2>
               <br />
               <br />
               <p onClick={() => navigate('/stores')} style={{ cursor: "pointer" }}>Our stores</p>
@@ -195,7 +217,7 @@ export default function Navbar() {
                         const categorySlug = getCategorySlug(item.category);
                         return (
                           <li
-                            key={item.id}
+                            key={`${item.category}_${item.id}`}
                             className="details"
                             onClick={() => {
                               navigate(`/products/${categorySlug}/${item.id}`)
@@ -308,6 +330,7 @@ export default function Navbar() {
         }}>Products</li>
         <li onClick={() => { navigate('/about') }}>About Us</li>
         <li onClick={() => { navigate('/offers') }}>Offers</li>
+        <li onClick={() => { navigate('/orders') }}>Reorder</li>
       </div>
     </div>
   );

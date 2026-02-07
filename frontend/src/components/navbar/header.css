@@ -234,6 +234,7 @@
     cursor: pointer;
     transition: color 0.2s ease;
     color: #111;
+    line-height: 1.5;
 }
 
 #bodyHover :hover {

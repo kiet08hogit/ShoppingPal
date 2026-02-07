@@ -11,6 +11,14 @@ function ProductComponent({ sort, products, category, price, isPreFiltered = fal
   const getCategorySlug = (categoryName) => {
     if (!categoryName) return '';
     const lowerCat = categoryName.toLowerCase();
+
+    // If already in slug format, return as-is
+    if (lowerCat === 'hard_hat' || lowerCat === 'power_tools' ||
+      lowerCat === 'safety_glasses' || lowerCat === 'safety_gloves') {
+      return lowerCat;
+    }
+
+    // Otherwise, convert from display name to slug
     if (lowerCat.includes('hard hat')) return 'hard_hat';
     if (lowerCat.includes('power tool')) return 'power_tools';
     if (lowerCat.includes('safety glass')) return 'safety_glasses';
@@ -28,10 +36,15 @@ function ProductComponent({ sort, products, category, price, isPreFiltered = fal
 
     try {
       const categorySlug = getCategorySlug(product.category);
+
+      window.dispatchEvent(new CustomEvent('cartCountIncrement', { detail: { quantity: 1 } }));
+
       await cartAPI.addToCart(product.id, categorySlug, 1);
+
       window.dispatchEvent(new Event('cartUpdated'));
     } catch (error) {
       console.error("Error adding to cart:", error);
+      window.dispatchEvent(new Event('cartUpdated'));
     }
   };
 
@@ -45,11 +58,17 @@ function ProductComponent({ sort, products, category, price, isPreFiltered = fal
 
     try {
       const categorySlug = getCategorySlug(product.category);
+
+      // Optimistic update - increment cart count immediately
+      window.dispatchEvent(new CustomEvent('cartCountIncrement', { detail: { quantity: 1 } }));
+
       await cartAPI.addToCart(product.id, categorySlug, 1);
       window.dispatchEvent(new Event('cartUpdated'));
       navigate("/cart");
     } catch (error) {
       console.error("Error adding to cart:", error);
+      // Revert optimistic update on error
+      window.dispatchEvent(new Event('cartUpdated'));
     }
   };
 

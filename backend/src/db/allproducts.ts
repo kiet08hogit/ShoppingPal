@@ -50,8 +50,9 @@ export const getAllProducts = async () => {
 }
 
 export const searchProducts = async (searchQuery: string) => {
-    const tables = [...new Set(Object.values(allowedTables))];
-    const queries = tables.map(table => `SELECT * FROM ${table} WHERE name ILIKE $1`);
+    const queries = primaryCategories.map(cat =>
+        `SELECT *, '${cat.name}' as category FROM ${cat.table} WHERE name ILIKE $1`
+    );
     const finalQuery = queries.join(' UNION ALL ');
 
     const result = await pool.query(finalQuery, [`%${searchQuery}%`]);
