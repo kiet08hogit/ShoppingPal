@@ -15,7 +15,11 @@ function SingleProduct() {
     const isauth = isSignedIn;
     let [avail, setAvail] = useState(false)
     let [addingToCart, setAddingToCart] = useState(false)
+    const [quantity, setQuantity] = useState(1);
     let navigate = useNavigate()
+
+    const handleIncrement = () => setQuantity(prev => prev + 1);
+    const handleDecrement = () => setQuantity(prev => prev > 1 ? prev - 1 : 1);
 
     const { id, category } = useParams()
     const [obj, setObj] = useState({
@@ -39,27 +43,28 @@ function SingleProduct() {
                 console.log(data);
                 setLoading(false)
                 setObj(data)
-                })
+            })
             .catch((error) => {
                 console.error('Error fetching product:', error);
                 setLoading(false);
             })
-            }, [id, category])
+    }, [id, category])
 
-    const [availability,setAvailbility] =useState('')
+    const [availability, setAvailbility] = useState('')
 
-    function checkDelivery(){
+    function checkDelivery() {
         setAvailbility("Yes Delivery Available at your Location")
     }
 
-console.log(availability);
+    console.log(availability);
     async function addToCart() {
         if (!isauth) return;
-        
+
         setAddingToCart(true);
         try {
             // Determine category slug from the URL params
-            await cartAPI.addToCart(obj.id, category, 1);
+            await cartAPI.addToCart(obj.id, category, quantity);
+            window.dispatchEvent(new Event('cartUpdated'));
             setAvail(false);
         } catch (error) {
             console.error('Error adding to cart:', error);
@@ -92,42 +97,57 @@ console.log(availability);
                             <h3>$ <span style={{ fontSize: "30px", fontWeight: "bolder" }}>{parseFloat(obj.price).toFixed(2)}</span></h3>
                             <p style={{ marginTop: "-10px", fontSize: "13px", color: "rgb(94, 94, 94)" }}>Price incl. of all taxes</p>
                             <p style={{ marginTop: "-10px", fontSize: "13px", color: "rgb(94, 94, 94)" }}>Price valid Dec 15 - Jan 15 or while supply lasts</p>
-                            
+
                             {obj.specifications?.availability && (
                                 <p style={{ fontSize: "13px", color: "orange", fontWeight: "bold" }}>{obj.specifications.availability}</p>
                             )}
-                            
+
+                            <div className="product-policy" style={{ margin: "10px 0", color: "#28a745", fontWeight: "bold" }}>
+                                <i className="fas fa-undo" style={{ marginRight: "5px" }}></i>
+                                Return within 30 days
+                            </div>
+
                             <span>
                                 <div className="abc1">
-                                    {obj.specifications?.rating && obj.specifications.rating !== "N/A" ? (
-                                        <p>
-                                            <FaStar />
-                                            <FaStar />
-                                            <FaStar />
-                                            <FaStar />
-                                            <FaStarHalf />
-                                        </p>
-                                    ) : (
-                                        <p style={{ fontSize: "13px" }}>No ratings yet</p>
-                                    )}
-                                    {obj.specifications?.reviews && obj.specifications.reviews !== "N/A" && (
-                                        <p style={{ fontSize: "13px" }}>({obj.specifications.reviews})</p>
-                                    )}
+                                    {/* Fake Random Reviews */}
+                                    {(() => {
+                                        // Generate deterministic random number based on product ID
+                                        const pseudoRandom = (seed) => {
+                                            const x = Math.sin(seed) * 10000;
+                                            return x - Math.floor(x);
+                                        };
+                                        const seed = obj.id ? parseInt(obj.id) : 123;
+                                        const rating = 3.5 + (pseudoRandom(seed) * 1.5); // 3.5 to 5.0
+                                        const reviewCount = Math.floor(10 + pseudoRandom(seed + 1) * 100);
+
+                                        return (
+                                            <>
+                                                <div style={{ color: "#ffc107", marginRight: "5px" }}>
+                                                    {[...Array(5)].map((_, i) => (
+                                                        <FaStar key={i} color={i < Math.round(rating) ? "#ffc107" : "#e4e5e9"} />
+                                                    ))}
+                                                </div>
+                                                <p style={{ fontSize: "13px", margin: 0 }}>({reviewCount} reviews)</p>
+                                            </>
+                                        );
+                                    })()}
                                 </div>
                             </span>
-                            <h4>How to get it</h4>
-                            <div className="checkin1">
-                                <div><p style={{ fontSize: "20px", marginLeft: "20px" }} ><BiStoreAlt /></p></div>
-                                <div><p style={{ marginTop: "0px" }}>Check in-store stock</p></div>
+                            <div className="quantity-selector" style={{ margin: "20px 0", display: "flex", alignItems: "center", gap: "15px" }}>
+                                <p style={{ margin: 0, fontWeight: "bold" }}>Quantity:</p>
+                                <div style={{ display: "flex", alignItems: "center", border: "1px solid #ccc", borderRadius: "5px" }}>
+                                    <button onClick={handleDecrement} style={{ border: "none", background: "#f0f0f0", padding: "5px 15px", fontSize: "18px", cursor: "pointer", borderRadius: "5px 0 0 5px" }}>-</button>
+                                    <span style={{ padding: "0 15px", fontWeight: "bold", fontSize: "16px" }}>{quantity}</span>
+                                    <button onClick={handleIncrement} style={{ border: "none", background: "#f0f0f0", padding: "5px 15px", fontSize: "18px", cursor: "pointer", borderRadius: "0 5px 5px 0" }}>+</button>
+                                </div>
                             </div>
-                            <div className="pinCheck1">
-                                <input type="text" placeholder="Enter pin code" />
-                                <button onClick={checkDelivery} >Check</button>
-                            </div>
+
                             <div className="delivey1">
-                                <div><p style={{ fontSize: "25px" }} ></p></div>
-                                <p></p>
-                                <div><p style={{ marginTop: "10px", fontSize: "14px", color: "Green" }}>{availability}</p></div>
+                                {obj.address ? (
+                                    <div><p style={{ marginTop: "10px", fontSize: "14px", color: "Green" }}>Delivery to {obj.address} within 2 days</p></div>
+                                ) : (
+                                    <div><p style={{ marginTop: "10px", fontSize: "14px", color: "Orange" }}>Please add address for delivery options</p></div>
+                                )}
                             </div>
                             <button onClick={addToCart} className="addToCart1" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" disabled={addingToCart}>
                                 <HiOutlineShoppingCart /> {addingToCart ? 'Adding...' : 'Add to Cart'}
@@ -135,15 +155,15 @@ console.log(availability);
                             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
-                                        
+
 
                                         <div style={{ color: "white", backgroundColor: "rgb(19, 80, 116)" }} class="modal-body">
-                                            <h3 style={{}}>{isauth?(!avail ? obj.name + " Added to Cart" : "Item already added"):"You have to Login first"}</h3>
+                                            <h3 style={{}}>{isauth ? (!avail ? obj.name + " Added to Cart" : "Item already added") : "You have to Login first"}</h3>
                                         </div>
                                         <div class="modal-footer">
-                                            <button onClick={()=>{isauth ?  navigate("/cart"):navigate("/login")}} type="button" data-bs-dismiss="modal" class="btn btn-primary">{isauth?"Go to cart":"login"}</button>
-                                            <button  type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                            
+                                            <button onClick={() => { isauth ? navigate("/cart") : navigate("/login") }} type="button" data-bs-dismiss="modal" class="btn btn-primary">{isauth ? "Go to cart" : "login"}</button>
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
                                         </div>
                                     </div>
                                 </div>

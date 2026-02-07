@@ -3,11 +3,14 @@ import { Product } from "../type/type";
 
 export const allowedTables: Record<string, string> = {
     "hard_hat": "industrial_hard_hat",
+    "industrial_hard_hat": "industrial_hard_hat",
     "safety_gloves": "industrial_safety_gloves",
+    "industrial_safety_gloves": "industrial_safety_gloves",
     "power_tools": "industrial_power_tools",
+    "industrial_power_tools": "industrial_power_tools",
     "safety_glasses": "industrial_safety_glasses",
+    "industrial_safety_glasses": "industrial_safety_glasses",
 };
-
 
 export const getProductsByCategory = async (category: string) => {
     const table = allowedTables[category];
@@ -31,7 +34,7 @@ export const getProductById = async (category: string, id: string) => {
 }
 
 export const getAllProducts = async () => {
-    const tables = Object.values(allowedTables);
+    const tables = [...new Set(Object.values(allowedTables))]; // Deduplicate
     const queries = tables.map(table => `SELECT * FROM ${table}`);
     const finalQuery = queries.join(' UNION ALL ');
     const result = await pool.query(finalQuery);
@@ -39,7 +42,7 @@ export const getAllProducts = async () => {
 }
 
 export const searchProducts = async (searchQuery: string) => {
-    const tables = Object.values(allowedTables);
+    const tables = [...new Set(Object.values(allowedTables))]; // Deduplicate
     // Construct a UNION ALL query to search across all tables
     // We select specific common columns or all columns if schemas are identical
     // Based on importData.ts, schemas for industrial_* tables are identical.
@@ -50,5 +53,3 @@ export const searchProducts = async (searchQuery: string) => {
     const result = await pool.query(finalQuery, [`%${searchQuery}%`]);
     return result.rows;
 }
-
-

@@ -26,10 +26,10 @@ export const userAPI = {
 
 export const cartAPI = {
   getCart: () => api.get('/cart'),
-  addToCart: (productId, category, quantity) => api.post('/cart/add', { productId, category, quantity }),
-  updateQuantity: (productId, quantity) => api.put(`/cart/update/${productId}`, { quantity }),
-  removeFromCart: (productId) => api.delete(`/cart/remove/${productId}`),
-  clearCart: () => api.delete('/cart/clear'),
+  addToCart: (productId, category, quantity) => api.post('/cart', { productId, category, quantity }),
+  updateQuantity: (productId, quantity) => api.put(`/cart/${productId}`, { quantity }),
+  removeFromCart: (productId) => api.delete(`/cart/${productId}`),
+  clearCart: () => api.delete('/cart'),
 };
 
 export const productsAPI = {

@@ -6,8 +6,25 @@ export const initDB = async () => {
             CREATE TABLE IF NOT EXISTS users (
                 id SERIAL PRIMARY KEY,
                 email VARCHAR(50) UNIQUE NOT NULL,
-                password VARCHAR(100) NOT NULL
+                password VARCHAR(100), -- Made nullable for Clerk users
+                clerk_id VARCHAR(255) UNIQUE -- Added for Clerk integration
             );
+
+            -- Add clerk_id column if it doesn't exist (for existing tables)
+            DO $$
+            BEGIN
+                IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='clerk_id') THEN
+                    ALTER TABLE users ADD COLUMN clerk_id VARCHAR(255) UNIQUE;
+                END IF;
+
+                IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='password' AND is_nullable='NO') THEN
+                    ALTER TABLE users ALTER COLUMN password DROP NOT NULL;
+                END IF;
+
+                IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='address') THEN
+                    ALTER TABLE users ADD COLUMN address TEXT;
+                END IF;
+            END $$;
 
             CREATE TABLE IF NOT EXISTS carts (
                 id SERIAL PRIMARY KEY,
