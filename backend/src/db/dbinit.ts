@@ -41,6 +41,15 @@ export const initDB = async () => {
                 added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 UNIQUE(cart_id, product_id, category)
             );
+
+            CREATE TABLE IF NOT EXISTS user_interactions (
+                id SERIAL PRIMARY KEY,
+                user_id INT REFERENCES users(id) ON DELETE CASCADE,
+                product_id INT NOT NULL,
+                category VARCHAR(50) NOT NULL,
+                interaction_type VARCHAR(20) DEFAULT 'view', -- 'view', 'purchase', etc.
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
         `);
         console.log("Database initialized successfully");
     } catch (error) {

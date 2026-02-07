@@ -8,12 +8,17 @@ import { useNavigate } from "react-router-dom";
 import { useUser } from "@clerk/clerk-react";
 import { cartAPI } from "../../utils/api";
 
+import ProductComponent from "../product page/ProductComponent";
+import { productsAPI } from "../../utils/api";
+
 function SingleProduct() {
     const { isSignedIn } = useUser();
     const isauth = isSignedIn;
     let [avail, setAvail] = useState(false)
     let [addingToCart, setAddingToCart] = useState(false)
     const [quantity, setQuantity] = useState(1);
+    const [recommendations, setRecommendations] = useState([]);
+
     let navigate = useNavigate()
 
     const handleIncrement = () => setQuantity(prev => prev + 1);
@@ -34,19 +39,33 @@ function SingleProduct() {
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
-        fetch(`${apiUrl}/products/category/${category}/${id}`)
-            .then((res) => res.json())
-            .then((data) => {
-                console.log(data);
-                setLoading(false)
-                setObj(data)
-            })
-            .catch((error) => {
+        const fetchProductData = async () => {
+            setLoading(true);
+            try {
+                // Fetch Main Product
+                const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+                const res = await fetch(`${apiUrl}/products/category/${category}/${id}`);
+                const data = await res.json();
+                setObj(data);
+
+                // Fetch Recommendations (Related Products)
+                try {
+                    const recRes = await productsAPI.getRelatedProducts(id);
+                    setRecommendations(recRes.data);
+                } catch (recError) {
+                    console.log("Could not fetch recommendations", recError);
+                }
+
+            } catch (error) {
                 console.error('Error fetching product:', error);
+            } finally {
                 setLoading(false);
-            })
+            }
+        };
+
+        fetchProductData();
     }, [id, category])
+
     async function addToCart() {
         if (!isauth) return;
 
@@ -160,6 +179,16 @@ function SingleProduct() {
                             </div>
                         </div>
                     </div>
+
+                    {/* Recommendations Section */}
+                    {recommendations.length > 0 && (
+                        <div style={{ marginTop: "50px", padding: "0 20px" }}>
+                            <h3>You Might Also Like</h3>
+                            <div className="ui grid container" style={{ marginTop: "20px" }}>
+                                <ProductComponent products={recommendations} sort="" category="" price={0} />
+                            </div>
+                        </div>
+                    )}
 
 
                 </div>}

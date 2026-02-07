@@ -22,6 +22,7 @@ api.interceptors.request.use(
 export const userAPI = {
   createOrUpdateProfile: (data) => api.post('/users/profile', data),
   getProfile: () => api.get('/users/profile'),
+  getRecommendations: () => api.get('/users/recommendations'),
 };
 
 export const cartAPI = {
@@ -43,6 +44,7 @@ export const productsAPI = {
   getProductsByCategory: (category) => api.get(`/products/category/${category}`),
   getProductById: (category, id) => api.get(`/products/category/${category}/${id}`),
   searchProducts: (query) => api.get(`/products/search?q=${query}`),
+  getRelatedProducts: (id) => api.get(`/products/recommendations/${id}`),
 };
 
 export default api;

@@ -31,7 +31,7 @@ function ProductComponent({ sort, products, category, price, isPreFiltered = fal
   }
 
   return (
-    <div className="container">
+    <div className="product-grid">
       {
         (() => {
           const filteredProducts = products
@@ -39,7 +39,13 @@ function ProductComponent({ sort, products, category, price, isPreFiltered = fal
               // Skip category filtering if products are already filtered by API
               if (isPreFiltered) return true;
               if (!category) return true;
-              return elem.category && elem.category.toLowerCase().includes(category.toLowerCase());
+
+              // Normalize both strings: remove spaces, underscores, and lowercase
+              const normalize = (str) => str ? str.toLowerCase().replace(/[\s_]/g, '') : '';
+              const productCat = normalize(elem.category);
+              const filterCat = normalize(category);
+
+              return productCat.includes(filterCat);
             })
             .filter((el) => {
               const productPrice = parseFloat(el.price) || 0;
@@ -61,7 +67,7 @@ function ProductComponent({ sort, products, category, price, isPreFiltered = fal
             const productPrice = parseFloat(elem.price) || 0;
             const originalPrice = (productPrice * 1.1).toFixed(2);
             return (
-              <div key={elem.id} onClick={() => { navigate(`/products/${categorySlug}/${elem.id}`) }} className="singleContainer">
+              <div key={`${elem.category}_${elem.id}`} onClick={() => { navigate(`/products/${categorySlug}/${elem.id}`) }} className="singleContainer">
                 <div style={{ marginBottom: "35px" }}>
                   <img width="100%" src={elem.image_url || "/images/placeholder.jpg"} alt={elem.category} />
                 </div>

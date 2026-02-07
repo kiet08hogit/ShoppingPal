@@ -8,13 +8,14 @@ import cartRoutes from './routes/cart.route';
 import orderRoutes from './routes/order.route';
 import allProductsRoutes from './routes/allproductsroute';
 import userRoutes from './routes/user.route';
+import { initRecommender } from './utils/recommender';
 
 
 const app = express();
 
 // Middleware
 app.use(cors({
-    origin: process.env.CLIENT_URL || "http://localhost:3000",
+    origin: process.env.CLIENT_URL || "http://localhost:4000",
     credentials: true
 }));
 app.use(express.json());
@@ -27,7 +28,11 @@ app.use('/api/orders', orderRoutes);
 app.use('/api/users', userRoutes);
 
 // Initialize DB
+
+
+// Initialize DB and Recommendation Engine
 initDB();
+initRecommender();
 
 // Mount Auth Routes
 // All routes in authRoutes will be prefixed with /auth

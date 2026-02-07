@@ -10,10 +10,20 @@ const getUserId = (req: Request): number => {
     return req.user.id;
 };
 
+import { trackInteraction } from '../utils/recommender';
+
 export const createOrderController = async (req: Request, res: Response) => {
     try {
         const userId = getUserId(req);
         const order = await orderDb.createOrder(userId);
+
+        // Track purchases for each item
+        if (order.items) {
+            order.items.forEach((item: any) => {
+                trackInteraction(userId, item.product_id, item.category, 'purchase');
+            });
+        }
+
         res.status(201).json(order);
     } catch (error: any) {
         console.error(error);

@@ -13,6 +13,15 @@ const ProductPage = () => {
   const [searchParams] = useSearchParams();
   const urlCategory = searchParams.get('category');
 
+  // Initialize category state from URL if present
+  useEffect(() => {
+    if (urlCategory) {
+      setCategory(urlCategory);
+    } else {
+      setCategory(""); // Reset if no param
+    }
+  }, [urlCategory]);
+
   const products = useSelector((state) => state.product.products);
   const dispatch = useDispatch();
 
@@ -20,11 +29,23 @@ const ProductPage = () => {
     const fetchProducts = async () => {
       try {
         let response;
-        if (urlCategory) {
-          response = await productsAPI.getProductsByCategory(urlCategory);
-        } else {
-          response = await productsAPI.getAllProducts();
-        }
+        // If we have a category selected (either from URL or dropdown), fetch all products and filter client-side, 
+        // OR fetch by category. 
+        // To keep it simple and consistent with your ProductComponent filtering logic, 
+        // let's fetch ALL products if no category is in URL, or fetch by category if URL has it.
+        // But since you want the dropdown to work, fetching ALL products is often better 
+        // so you can filter them in the UI without re-fetching.
+
+        // HOWEVER, your existing logic was: if URL has category, fetch by category. 
+        // If I reload, urlCategory exists, so it fetches only those.
+        // User then changes dropdown to "All", but we only have "Hard hats" in state.
+
+        // BETTER APPROACH: Always fetch all products so client-side filtering works seamlessly
+        // OR handle the "fetch on change" logic.
+
+        // Let's stick to cleaning up the interference:
+        response = await productsAPI.getAllProducts();
+
         dispatch(setProducts(response.data));
       } catch (err) {
         console.log("Error fetching products:", err);
@@ -32,27 +53,27 @@ const ProductPage = () => {
       }
     };
     fetchProducts();
-  }, [urlCategory, dispatch]);
+  }, [dispatch]);
 
   return (
     <><div id="filter-bar">
-      <select onChange={(e) => { setSort(e.target.value) }} name="price" id="price">
+      <select onChange={(e) => { setSort(e.target.value) }} name="sort" id="sort">
         <option value="">Sort</option>
         <option value="#" disabled></option>
         <option value="htl">Price: High to Low</option>
         <option value="#" disabled></option>
         <option value="lth">Price: Low to High</option>
       </select>
-      <select onChange={(e) => { setCategory(e.target.value) }} name="beds" id="beds">
+      <select value={category} onChange={(e) => { setCategory(e.target.value) }} name="category" id="category">
         <option value="">All Categories</option>
         <option value="#" disabled></option>
-        <option value="Hard hat">Hard Hats</option>
+        <option value="hard_hat">Hard Hats</option>
         <option value="#" disabled></option>
-        <option value="Power Tools">Power Tools</option>
+        <option value="power_tools">Power Tools</option>
         <option value="#" disabled></option>
-        <option value="Safety Glasses">Safety Glasses</option>
+        <option value="safety_glasses">Safety Glasses</option>
         <option value="#" disabled></option>
-        <option value="Safety Gloves">Safety Gloves</option>
+        <option value="safety_gloves">Safety Gloves</option>
         <option value="#" disabled></option>
       </select>
       <select onChange={(e) => { setPrice(e.target.value) }} name="price-range" id="price-range">
@@ -66,13 +87,13 @@ const ProductPage = () => {
         <option value="#" disabled></option>
         <option value="200">Above $150</option>
       </select>
-    </div><div className="ui grid container">
+    </div > <div className="ui grid container">
         <ProductComponent
           sort={sort}
           products={products}
           category={category}
           price={price}
-          isPreFiltered={!!urlCategory}
+          isPreFiltered={false}
         />
       </div></>
   );

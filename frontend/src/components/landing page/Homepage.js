@@ -2,6 +2,33 @@ import React, { useState, useEffect } from 'react'
 import "../landing page/homepage.css"
 import { useNavigate } from "react-router-dom"
 import categoriesData from "../../data/categories.json"
+import { useUser } from "@clerk/clerk-react";
+import { userAPI } from "../../utils/api";
+import ProductComponent from "../product page/ProductComponent";
+
+const RecommendationsSection = () => {
+    const { isSignedIn } = useUser();
+    const [recommendations, setRecommendations] = useState([]);
+
+    useEffect(() => {
+        if (isSignedIn) {
+            userAPI.getRecommendations()
+                .then(res => setRecommendations(res.data))
+                .catch(err => console.error("Failed to fetch personal recommendations", err));
+        }
+    }, [isSignedIn]);
+
+    if (!isSignedIn || recommendations.length === 0) return null;
+
+    return (
+        <div style={{ padding: "0 20px", marginBottom: "40px" }}>
+            <h2 style={{ textAlign: "center", marginBottom: "20px" }}>Recommended for You</h2>
+            <div className="ui grid container">
+                <ProductComponent products={recommendations} sort="" category="" price={0} />
+            </div>
+        </div>
+    );
+};
 
 export default function Homepage() {
     let navigate = useNavigate()
@@ -48,6 +75,8 @@ export default function Homepage() {
                     <h1>About us</h1>
                     <p>INDUSTRA has been America's reliable partner for MRO and industrial supplies for more than nine decades. We are dedicated to connecting customers with the essential products and services they require. With access to over a million items from a vast network of trusted suppliers, INDUSTRA provides seamless online tools and a mobile app for ordering and managing MRO equipment anytime, anywhere. Our commitment is further supported by round-the-clock customer service and expert technical assistance from professionals with deep expertise in MRO tools and products.</p>
                 </div>
+
+                <RecommendationsSection />
 
                 <div class="categories-section">
                     <h2>Our Categories</h2>

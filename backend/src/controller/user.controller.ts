@@ -53,3 +53,20 @@ export const createOrUpdateProfile = async (req: Request, res: Response) => {
         res.status(500).json({ message: "Error updating profile" });
     }
 };
+import { getPersonalizedRecommendations } from '../utils/recommender';
+
+export const getMyRecommendations = async (req: Request, res: Response) => {
+    try {
+        // @ts-ignore
+        const userId = req.user?.id;
+        if (!userId) {
+            return res.status(401).json({ message: "Unauthorized" });
+        }
+
+        const products = await getPersonalizedRecommendations(userId);
+        res.json(products);
+    } catch (error) {
+        console.error("Error fetching personalized recommendations:", error);
+        res.status(500).json({ message: "Error fetching personalized recommendations" });
+    }
+};
