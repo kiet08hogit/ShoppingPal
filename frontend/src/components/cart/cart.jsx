@@ -91,7 +91,7 @@ function Cart() {
                 }
             </div>
             {
-                cartItems.length==0? <EmptyCart />:<div style={{padding:"30px 0px",borderBottom:"1px solid rgb(160, 159, 159)",width:"50%",margin:"auto"}} >
+                cartItems.length===0? <EmptyCart />:<div style={{padding:"30px 0px",borderBottom:"1px solid rgb(160, 159, 159)",width:"50%",margin:"auto"}} >
                 <div className="subtotal">
                     {cartItems.map((elem) => {
                         totalPrice += (elem.price || 0) * elem.quantity;

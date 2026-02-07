@@ -32,7 +32,7 @@ function ProductComponent({sort,products,category,price}){
                         (Math.trunc(el.salesPrice.numeral) * 100 - 1)>price-5000;
           })
           .map((elem)=>{
-            abc = true
+            // abc = true
             return (
               <>
               <div onClick={()=>{navigate(`/products/${elem.id}`)}} className="singleContainer">

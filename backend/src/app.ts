@@ -5,7 +5,7 @@ import authRoutes from './routes/auth.routes';
 import { initDB } from './db/dbinit';
 import { requireAuth } from './middleware/auth.middleware';
 import cartRoutes from './routes/cart.route';
-
+import orderRoutes from './routes/order.route';
 import allProductsRoutes from './routes/allproductsroute';
 dotenv.config();
 
@@ -18,8 +18,9 @@ app.use(express.json());
 
 // Routes
 app.use('/auth', authRoutes);
-app.use('/products', allProductsRoutes);
+app.use('/products',allProductsRoutes);
 app.use('/cart', cartRoutes);
+app.use('/orders', orderRoutes);
 
 // Initialize DB
 initDB();
