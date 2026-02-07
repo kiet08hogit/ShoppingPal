@@ -178,7 +178,7 @@ export default function CardsDetails() {
                         <hr/>
                         <div class="payq">
                             <h3 id="p12q">You Pay</h3>
-                            <h3 id="hhhq"></h3>
+                            <h3 id="hhhq">Payment Details</h3>
                         </div>
                         <div id="designq">
                             <img id="signq" src="https://adn-static1.nykaa.com/media/wysiwyg/Payments/3Success.svg" alt=""/>

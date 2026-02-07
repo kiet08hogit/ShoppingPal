@@ -1,7 +1,6 @@
 import "./cart.css"
 
 import { RiDeleteBin6Line } from 'react-icons/ri';
-import { useSelector } from "react-redux";
 
 function CartProduct({del, price, name, detail, measurement, image, quantity,setq,id }) {
     

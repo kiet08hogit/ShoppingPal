@@ -16,7 +16,7 @@ useEffect(()=>{
     tot += data[i].price*data[i].quantity;
     setTotal(tot)
 }
-},[])
+},[data])
 
   function applyCoupen(){
     if(coupen === "masai"){
@@ -183,7 +183,7 @@ useEffect(()=>{
                 </button>
               </div>
               <div class="gettxt">
-                <p>Let us know how we are doing <a href="">Send Feedback</a></p>
+                <p>Let us know how we are doing <a href="/feedback">Send Feedback</a></p>
                 <p class="tnk">Thanks!</p>
                 <p>Your feedback is appreciated and reviewed by our team.</p>
               </div>

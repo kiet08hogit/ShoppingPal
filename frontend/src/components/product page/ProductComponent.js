@@ -1,12 +1,9 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import React from "react";
 import "./ProListing.css"
 import { useNavigate } from "react-router-dom";
 
 function ProductComponent({sort,products,category,price}){
   const navigate = useNavigate()
-  let abc = false;
   
   if (!products || !Array.isArray(products)) {
     return <div className="container"><p>Loading products...</p></div>;
@@ -14,8 +11,9 @@ function ProductComponent({sort,products,category,price}){
   
   if(sort!==""){
     products.sort((a,b)=>{
-      if(sort === "lth") return a.salesPrice.numeral- b.salesPrice.numeral
-      else if(sort === 'htl') return b.salesPrice.numeral- a.salesPrice.numeral
+      if(sort === "lth") return a.salesPrice.numeral- b.salesPrice.numeral;
+      else if(sort === 'htl') return b.salesPrice.numeral- a.salesPrice.numeral;
+      return 0;
     })
   }
 
@@ -28,10 +26,10 @@ function ProductComponent({sort,products,category,price}){
           })
           .filter((el)=>{
             console.log(price)
-            if(price == 0) return el
-            if(price ==15000) return (Math.trunc(el.salesPrice.numeral) * 100 - 1)>15000
+            if(price === 0) return el;
+            if(price === 15000) return (Math.trunc(el.salesPrice.numeral) * 100 - 1)>15000;
             else return (Math.trunc(el.salesPrice.numeral) * 100 - 1)<price && 
-                        (Math.trunc(el.salesPrice.numeral) * 100 - 1)>price-5000
+                        (Math.trunc(el.salesPrice.numeral) * 100 - 1)>price-5000;
           })
           .map((elem)=>{
             abc = true

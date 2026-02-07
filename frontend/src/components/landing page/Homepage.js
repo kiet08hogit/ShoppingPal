@@ -16,27 +16,27 @@ export default function Homepage() {
         <div class="img-gallery-1">
             <h1>Reclaim your productivity</h1>
             <div class="gallrey-items gallery-2x2">
-                <a onClick={()=>{navigate("/products")}}><img src="/images/grainger_4-1200x800.jpg" alt=""/></a>
-                <a href=""><img src="/images/grainger_04.jpg" alt=""/></a>
-                <a href=""><img src="/images/grainger_5-1200x800.jpg" alt="" /></a>
-                <a href=""><img src="/images/W-DTMW172_MFG-MW_OSG_712x396.jpg" alt="" /></a>
+                <button onClick={()=>{navigate("/products")}} style={{background:"none",border:"none",padding:0}}><img src="/images/grainger_4-1200x800.jpg" alt="Navigate to products"/></button>
+                <button style={{background:"none",border:"none",padding:0}}><img src="/images/grainger_04.jpg" alt="Gallery item"/></button>
+                <button style={{background:"none",border:"none",padding:0}}><img src="/images/grainger_5-1200x800.jpg" alt="Gallery item" /></button>
+                <button style={{background:"none",border:"none",padding:0}}><img src="/images/W-DTMW172_MFG-MW_OSG_712x396.jpg" alt="Gallery item" /></button>
             </div>
         </div>
         <div class="scroll-menu">
             <div class="scroll-menu-item">
                 
-                <a href=""><i class="fa-sharp fa-solid fa-right"></i><img class="scroll-menu-img" src="/images/promo-assembly.jpg" alt=""/></a>
+                <button style={{background:"none",border:"none",padding:0}}><i class="fa-sharp fa-solid fa-right"></i><img class="scroll-menu-img" src="/images/promo-assembly.jpg" alt="Promo assembly"/></button>
                 <p id="first-scroll-item-p">Lift, Push, Pull & Stand</p>
             </div>
 
             <div class="scroll-menu-item" id="second-scroll-item">
-                <a href=""><img class="scroll-menu-img" src="/images/promo-price.jpg" alt=""/></a>
+                <button style={{background:"none",border:"none",padding:0}}><img class="scroll-menu-img" src="/images/promo-price.jpg" alt="Promo price"/></button>
                 <p>Supercharge your shopping</p>
               
             </div>
 
             <div class="scroll-menu-item" id="third-scroll-item">
-                <a href=""><img class="scroll-menu-img" src="/images/promo-budget.jpg" alt=""/></a>
+                <button style={{background:"none",border:"none",padding:0}}><img class="scroll-menu-img" src="/images/promo-budget.jpg" alt="Promo budget"/></button>
                 <p>New lower price</p>
                 
             </div>
