@@ -21,6 +21,72 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+    <div id="agentContainer">
+      <div id="webchatContainer">
+        <iframe 
+          src="https://copilotstudio.microsoft.com/environments/Default-e202cd47-7a56-4baa-99e3-e3b71a7c77dd/bots/copilots_header_9ffd6/webchat?__version__=2"
+          class="copilot-iframe"
+          title="Industra Assistant">
+        </iframe>
+
+        <div id="webchat"></div>
+      </div>
+      <button id="agentButton" onclick="toggleAgent()">Ask me!</button>
+    </div>
+
+    <script>
+      let chatLoaded = false;
+      async function loadWebChat(){
+        WebChat.renderWebChat(
+          { directLine, styleOptions },
+          document.getElementById("webchat")
+        );
+
+        const subscription = directLine.connectionStatus$.subscribe({
+          next(value) {
+            if (value === 2) {
+              directLine
+              .postActivity({
+                type: "event",
+                name: "startConversation",
+                locale: document.documentElement.lang || "en",
+                from: { id: "user" },
+              })
+              .subscribe();
+              subscription.unsubscribe();
+            }
+          },
+        });
+        chatLoaded = true;
+      }
+      async function toggleAgent() {
+        const chatContainer = document.getElementById("webchatContainer");
+          const button = document.getElementById("agentButton");
+          if (!chatContainer.classList.contains("active")) {
+          //Open chat
+          chatContainer.classList.add("active");
+          button.textContent = "Close";
+          if (!chatLoaded) await loadWebChat();
+          //focus input
+          const observer = new MutationObserver((mutations, obs) => {
+          const textInput = document.querySelector(".webchat__send-box-text-box__input");
+          if (textInput) {
+            textInput.focus();
+            obs.disconnect();
+            }
+        });
+          
+        observer.observe(document.getElementById("webchat"), {
+            childList: true,
+            subtree: true,
+        });
+      } else {
+        //close chat
+        chatContainer.classList.remove("active");
+        button.textContent = "Ask me!";
+      }
+    }
+    </script>
   </body>
 </html>
 <script src="	https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
