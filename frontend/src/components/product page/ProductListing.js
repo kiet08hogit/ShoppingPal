@@ -28,27 +28,16 @@ const ProductPage = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        let response;
-        // If we have a category selected (either from URL or dropdown), fetch all products and filter client-side, 
-        // OR fetch by category. 
-        // To keep it simple and consistent with your ProductComponent filtering logic, 
-        // let's fetch ALL products if no category is in URL, or fetch by category if URL has it.
-        // But since you want the dropdown to work, fetching ALL products is often better 
-        // so you can filter them in the UI without re-fetching.
-
-        // HOWEVER, your existing logic was: if URL has category, fetch by category. 
-        // If I reload, urlCategory exists, so it fetches only those.
-        // User then changes dropdown to "All", but we only have "Hard hats" in state.
-
-        // BETTER APPROACH: Always fetch all products so client-side filtering works seamlessly
-        // OR handle the "fetch on change" logic.
-
-        // Let's stick to cleaning up the interference:
-        response = await productsAPI.getAllProducts();
-
+        console.log("🔍 Fetching products from API...");
+        let response = await productsAPI.getAllProducts();
+        
+        console.log("✅ Products received:", response.data?.length || 0, "products");
+        console.log("📦 Sample product:", response.data?.[0]);
+        
         dispatch(setProducts(response.data));
       } catch (err) {
-        console.log("Error fetching products:", err);
+        console.error("❌ Error fetching products:", err);
+        console.error("Error details:", err.response?.data || err.message);
         dispatch(setProducts([]));
       }
     };

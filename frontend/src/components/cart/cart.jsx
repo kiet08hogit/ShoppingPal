@@ -16,20 +16,27 @@ function Cart() {
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
+        console.log("🔄 Cart component mounted, isAuth:", isAuth);
         if (isAuth) {
             loadCart();
         } else {
+            console.log("⚠️ User not authenticated, skipping cart load");
             setLoading(false);
         }
     }, [isAuth])
 
     async function loadCart() {
+        console.log("📦 Loading cart...");
         try {
             const response = await cartAPI.getCart();
+            console.log("✅ Cart loaded:", response.data);
+            console.log("📊 Cart items:", response.data.items);
             // Backend returns { id, user_id, created_at, items: [...] }
             setCartItems(response.data.items || []);
         } catch (error) {
-            console.error('Error loading cart:', error);
+            console.error('❌ Error loading cart:', error);
+            console.error('Error response:', error.response?.data);
+            console.error('Error status:', error.response?.status);
             setCartItems([]);
         } finally {
             setLoading(false);

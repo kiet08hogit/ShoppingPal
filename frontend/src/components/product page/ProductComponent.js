@@ -72,7 +72,9 @@ function ProductComponent({ sort, products, category, price, isPreFiltered = fal
     }
   };
 
+
   if (!products || !Array.isArray(products)) {
+    console.log("⏳ Products not ready yet");
     return <div className="container"><p>Loading products...</p></div>;
   }
 

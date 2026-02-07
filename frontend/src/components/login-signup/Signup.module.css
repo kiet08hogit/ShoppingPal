@@ -16,7 +16,7 @@ Link{
     width: 40%;
     float: left;
     padding:30px;
-    font-size: small;
+    font-size: 16px;
     height: max-content;
 }
 
@@ -75,6 +75,8 @@ input[type=radio]{
 	border:none;
 	border-bottom: 1px solid #777;
  	box-shadow: none !important;
+	font-size: 18px;
+	padding: 12px 10px;
 }
 .inputWrapper .inputFiled:focus{
     border-color: blue;
@@ -98,6 +100,8 @@ input[type=radio]{
 .rightDiv form button{
     width: 80%;
     background-color: #111111;
+    font-size: 18px;
+    padding: 15px;
     color: white;
     height: 80px;
     border-radius: 40px;
