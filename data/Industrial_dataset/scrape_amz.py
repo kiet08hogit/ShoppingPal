@@ -3,9 +3,12 @@ import requests
 from bs4 import BeautifulSoup
 import json
 import time
+import os
+import re
+import urllib.parse
 
-# Amazon search URL for power tools
-url = "https://www.amazon.com/s?k=hard+hat"
+# Amazon search URL for safety glasses
+url = "https://www.amazon.com/s?k=safety+glasses"
 
 # Headers to mimic a real browser
 headers = {
@@ -33,6 +36,8 @@ try:
     print(f"Scraping {len(products)} products from first page\n")
     
     products_data = []
+    images_dir = "images"
+    os.makedirs(images_dir, exist_ok=True)
     
     for idx, product in enumerate(products, 1):
         try:
@@ -93,6 +98,49 @@ try:
             avail_elem = product.find('span', string=lambda x: x and ('in stock' in str(x).lower() or 'only' in str(x).lower()))
             if avail_elem:
                 availability = avail_elem.get_text(strip=True)
+
+            # Image URL and download
+            image_path = ""
+            try:
+                img = product.find('img', {'class': 's-image'})
+                if not img:
+                    img = product.find('img')
+
+                img_url = None
+                if img:
+                    # Common attributes where Amazon stores image URLs
+                    if img.has_attr('src') and img['src'].strip():
+                        img_url = img['src']
+                    elif img.has_attr('data-src') and img['data-src'].strip():
+                        img_url = img['data-src']
+                    elif img.has_attr('data-lazy-src') and img['data-lazy-src'].strip():
+                        img_url = img['data-lazy-src']
+                    elif img.has_attr('data-a-dynamic-image'):
+                        try:
+                            dyn = json.loads(img['data-a-dynamic-image'])
+                            if isinstance(dyn, dict) and len(dyn) > 0:
+                                img_url = next(iter(dyn.keys()))
+                        except Exception:
+                            img_url = None
+
+                if img_url:
+                    try:
+                        img_resp = requests.get(img_url, headers=headers, timeout=10)
+                        img_resp.raise_for_status()
+                        url_path = urllib.parse.urlparse(img_url).path
+                        ext = os.path.splitext(url_path)[1]
+                        if not ext or len(ext) > 6:
+                            ext = '.jpg'
+
+                        safe_name = re.sub(r'[^A-Za-z0-9 _-]', '', name)[:50].strip().replace(' ', '_')
+                        fname = f"{idx:02d}_{safe_name}{ext}"
+                        image_path = os.path.join(images_dir, fname)
+                        with open(image_path, 'wb') as f:
+                            f.write(img_resp.content)
+                    except Exception:
+                        image_path = ""
+            except Exception:
+                image_path = ""
             
             if name != "N/A":  # Only add if we found a name
                 products_data.append({
@@ -102,7 +150,8 @@ try:
                     'Number of Reviews': reviews,
                     'Prime': prime,
                     'Availability': availability,
-                    'URL': product_url
+                    'URL': product_url,
+                    'Image': image_path
                 })
                 
                 print(f"{len(products_data):2d}. ✓ {name[:60]}...")
@@ -112,10 +161,10 @@ try:
             continue
     
     # Save to CSV
-    csv_filename = "Hard hat.csv"
+    csv_filename = "Safety glasses.csv"
     if products_data:
         with open(csv_filename, 'w', newline='', encoding='utf-8') as csvfile:
-            fieldnames = ['Product Name', 'Price', 'Rating', 'Number of Reviews', 'Prime', 'Availability', 'URL']
+            fieldnames = ['Product Name', 'Price', 'Rating', 'Number of Reviews', 'Prime', 'Availability', 'URL', 'Image']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             
             writer.writeheader()
