@@ -1,3 +1,211 @@
+/* Modern Confirmation Page Styles - Matching Checkout Design */
+
+.confirmation-content {
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.success-card {
+    background: white;
+    padding: 60px 40px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 800px;
+    width: 100%;
+}
+
+.success-icon {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 30px;
+}
+
+.success-title {
+    font-size: 32px;
+    font-weight: 600;
+    color: #149253;
+    margin-bottom: 20px;
+}
+
+.order-number {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.order-number strong {
+    color: #111;
+    font-weight: 600;
+}
+
+.success-message {
+    font-size: 16px;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+.continue-shopping-btn {
+    display: inline-block;
+    padding: 14px 40px;
+    background: #111;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.2s;
+    margin-bottom: 40px;
+}
+
+.continue-shopping-btn:hover {
+    background: #333;
+    transform: translateY(-2px);
+}
+
+.order-info {
+    border-top: 1px solid #e5e5e5;
+    padding-top: 30px;
+    margin-top: 20px;
+}
+
+.disclaimer {
+    font-size: 14px;
+    color: #757575;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Invoice Section */
+.invoice-section {
+    margin: 40px 0;
+    text-align: left;
+    border-top: 2px solid #e5e5e5;
+    padding-top: 30px;
+}
+
+.invoice-section h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #111;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.invoice-items {
+    margin-bottom: 30px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.invoice-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    border: 1px solid #e5e5e5;
+}
+
+.invoice-item-image {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+}
+
+.invoice-item-details {
+    flex: 1;
+}
+
+.invoice-item-details h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #111;
+    margin: 0 0 5px 0;
+}
+
+.invoice-item-details p {
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+}
+
+.invoice-item-price {
+    font-size: 18px;
+    font-weight: 600;
+    color: #111;
+}
+
+.invoice-totals {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    border: 2px solid #e5e5e5;
+}
+
+.invoice-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    font-size: 16px;
+    color: #111;
+}
+
+.invoice-row.discount {
+    color: #149253;
+    font-weight: 600;
+}
+
+.invoice-row.total {
+    border-top: 2px solid #111;
+    padding-top: 15px;
+    margin-top: 10px;
+    font-size: 20px;
+    font-weight: 700;
+    color: #111;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .success-card {
+        padding: 40px 20px;
+    }
+    
+    .success-title {
+        font-size: 24px;
+    }
+    
+    .success-icon {
+        width: 60px;
+        height: 60px;
+    }
+
+    .invoice-item {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .invoice-item-image {
+        width: 80px;
+        height: 80px;
+    }
+
+    .invoice-row {
+        font-size: 14px;
+    }
+
+    .invoice-row.total {
+        font-size: 18px;
+    }
+}
+
+/* Old Styles - Deprecated */
 #top {
     background-color: #dcf5fc;
     box-sizing: border-box;

@@ -20,6 +20,8 @@ import AboutUs from './components/about/AboutUs';
 
 import AddressModal from './components/AddressModal';
 import Offers from './components/offers/Offers';
+import Orders from './components/orders/Orders';
+import OrderDetail from './components/orders/OrderDetail';
 
 const ProtectedRoute = ({ children }) => {
   return (
@@ -58,14 +60,19 @@ function App() {
             <Checkout />
           </ProtectedRoute>
         } />
-        <Route path="/checkout3" element={
-          <ProtectedRoute>
-            <CardsDetails />
-          </ProtectedRoute>
-        } />
         <Route path="/thankyou" element={
           <ProtectedRoute>
             <ThankYOu />
+          </ProtectedRoute>
+        } />
+        <Route path='/orders' element={
+          <ProtectedRoute>
+            <Orders />
+          </ProtectedRoute>
+        } />
+        <Route path='/orders/:id' element={
+          <ProtectedRoute>
+            <OrderDetail />
           </ProtectedRoute>
         } />
         <Route path='/offers' element={<Offers />} />

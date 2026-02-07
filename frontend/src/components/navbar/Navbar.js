@@ -109,7 +109,7 @@ export default function Navbar() {
                 <img
                   style={{ cursor: "pointer", maxWidth: "280px" }}
                   onClick={() => { navigate("/") }}
-                  src="/images/industra-logo.png"
+                  src="/images/industra-logo1.png"
                   alt="INDUSTRA Logo"
                 />
               </h5>
@@ -144,7 +144,11 @@ export default function Navbar() {
                 const closeBtn = document.querySelector('.btn-close');
                 if (closeBtn) closeBtn.click();
               }}>About Us</h2>
-              <h2>Offers</h2>
+              <h2 style={{ cursor: "pointer" }} onClick={() => {
+                navigate('/offers');
+                const closeBtn = document.querySelector('.btn-close');
+                if (closeBtn) closeBtn.click();
+              }}>Offers</h2>
               <br />
               <br />
 
@@ -162,7 +166,7 @@ export default function Navbar() {
 
           <img
             onClick={() => { navigate("/") }}
-            src="/images/industra-logo.png"
+            src="/images/industra-logo1.png"
             alt="INDUSTRA Logo"
             style={{ cursor: "pointer", maxHeight: "250px" }}
           />

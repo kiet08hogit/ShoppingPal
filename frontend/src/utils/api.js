@@ -32,6 +32,12 @@ export const cartAPI = {
   clearCart: () => api.delete('/cart'),
 };
 
+export const orderAPI = {
+  createOrder: () => api.post('/orders'),
+  getOrders: () => api.get('/orders'),
+  getOrderById: (orderId) => api.get(`/orders/${orderId}`),
+};
+
 export const productsAPI = {
   getAllProducts: () => api.get('/products'),
   getProductsByCategory: (category) => api.get(`/products/category/${category}`),

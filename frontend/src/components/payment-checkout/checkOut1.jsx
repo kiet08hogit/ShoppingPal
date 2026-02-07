@@ -1,141 +1,171 @@
 import "./checkOut1.css"
-import { useSelector } from "react-redux";
-import {  useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useUser } from "@clerk/clerk-react";
+import { cartAPI } from "../../utils/api";
 
 function Checkout1() {
     let navigate = useNavigate()
-    let data = useSelector((arr)=>{
-        console.log(arr.singlePR)
-        return arr.singlePR
-    })
-    let total = 0;
-    for(var i=0;i<data.length;i++){
-        total += data[i].price*data[i].quantity;
+    const { isSignedIn } = useUser();
+    const [cartItems, setCartItems] = useState([])
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        if (isSignedIn) {
+            loadCart();
+        } else {
+            navigate('/login');
+        }
+    }, [isSignedIn])
+
+    async function loadCart() {
+        try {
+            const response = await cartAPI.getCart();
+            setCartItems(response.data.items || []);
+        } catch (error) {
+            console.error('Error loading cart:', error);
+            setCartItems([]);
+        } finally {
+            setLoading(false);
+        }
+    }
+    
+    let subtotal = 0;
+    cartItems.forEach(item => {
+        subtotal += (parseFloat(item.price) || 0) * item.quantity;
+    });
+
+    // Calculate shipping and tax
+    const shippingCost = 7.00;
+    const taxRate = 0.10; // 10% tax for IL
+    const taxAmount = subtotal * taxRate;
+    const totalAmount = subtotal + shippingCost + taxAmount;
+
+    if (loading) {
+        return <div style={{ textAlign: 'center', padding: '50px' }}>Loading...</div>;
     }
 
     return (
-        <div className="checkoutContainer">
-            <p>Delivey Information</p>
-            <div className="checkoutParent">
-                <form>
-                    <h4 class="mb-3">Delivery Address</h4>
-                    <div class="name">
-                        <div class="mb-3">
-                            <label for="exampleFormControlInput1" class="form-label">First Name</label>
-                            <input type="text" class="form-control first_name" id="exampleFormControlInput1"/>
-                        </div>
-                        <div class="mb-3">
-                            <label for="exampleFormControlInput1" class="form-label ">Last Name</label>
-                            <input type="text" class="form-control second_name" id="exampleFormControlInput1"/>
-                        </div>
+        <div className="modern-checkout-container">
+            <div className="checkout-header">
+                <h1>Checkout</h1>
+                <div className="checkout-steps">
+                    <div className="step active">1. Shipping</div>
+                    <div className="step" style={{opacity: 0.5, cursor: 'not-allowed'}}>2. Payment</div>
+                    <div className="step" style={{opacity: 0.5, cursor: 'not-allowed'}}>3. Confirmation</div>
+                </div>
+            </div>
+            
+            <div className="checkout-content">
+                <div className="shipping-section">
+                    <div className="section-card">
+                        <h2>Delivery Address</h2>
+                        <form>
+                            <div className="form-row">
+                                <div className="form-group">
+                                    <label>First<br/>Name</label>
+                                    <input type="text" className="form-input" />
+                                </div>
+                                <div className="form-group">
+                                    <label>Last<br/>Name</label>
+                                    <input type="text" className="form-input" />
+                                </div>
+                            </div>
 
-                    </div>
-                    <div class="mb-3">
-                        <label for="exampleFormControlInput1" class="form-label">Full Name for Delivery Address</label>
-                        <input type="text" class="form-control full_name" id="exampleFormControlInput1"/>
-                    </div>
-                    <div class="mb-3">
-                        <label for="exampleFormControlInput1" class="form-label">Address Line 1</label>
-                        <input type="text" class="form-control addr" id="exampleFormControlInput1"/>
-                    </div>
-                    <div class="mb-3">
-                        <label for="exampleFormControlInput1" class="form-label">Address Line 2 (optional)</label>
-                        <input type="text" class="form-control" id="exampleFormControlInput1"/>
-                    </div>
-                    <div class="name">
-                        <div class="mb-3">
-                            <label for="exampleFormControlInput1" class="form-label">City</label>
-                            <input type="text" class="form-control city" id="exampleFormControlInput1"/>
-                        </div>
-                        <div class="mb-3">
-                            <label for="exampleFormControlInput1" class="form-label">State</label>
-                            <select class="form-select state" aria-label="Default select example">
-                                <option selected>-----</option>
-                                <option value="Andhra Pradesh">Andhra Pradesh</option>
-                                <option value="Arunachal Pradesh">Arunachal Pradesh</option>
-                                <option value="Assam">Assam</option>
-                                <option value="Bihar">Bihar</option>
-                                <option value="Chhattisgarh">Chhattisgarh</option>
-                                <option value="Goa">Goa</option>
-                                <option value="Gujarat">Gujarat</option>
-                                <option value="Haryana">Haryana</option>
-                                <option value="Himachal Pradesh">Himachal Pradesh</option>
-                                <option value="Jharkhand">Jharkhand</option>
-                                <option value="Karnataka">Karnataka</option>
-                                <option value="Kerala">Kerala</option>
-                                <option value="Madhya Pradesh">Madhya Pradesh</option>
-                                <option value="Maharashtra">Maharashtra</option>
-                                <option value="Manipur">Manipur</option>
-                                <option value="Meghalaya">Meghalaya</option>
-                                <option value="Mizoram">Mizoram</option>
-                                <option value="Nagaland">Nagaland</option>
-                                <option value="Odisha">Odisha</option>
-                                <option value="Punjab">Punjab</option>
-                                <option value="Rajasthan">Rajasthan</option>
-                                <option value="Sikkim">Sikkim</option>
-                                <option value="Tamil Nadu">Tamil Nadu</option>
-                                <option value="Telangana">Telangana</option>
-                                <option value="Tripura">Tripura</option>
-                                <option value="Uttar Pradesh">Uttar Pradesh</option>
-                                <option value="Uttarakhand">Uttarakhand</option>
-                                <option value="West Bengal">West Bengal</option>
+                            <div className="form-group">
+                                <label>Full Name for Delivery Address</label>
+                                <input type="text" className="form-input" />
+                            </div>
 
+                            <div className="form-group">
+                                <label>Address Line 1</label>
+                                <input type="text" className="form-input" />
+                            </div>
 
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="exampleFormControlInput1" class="form-label">Zip</label>
-                            <input type="number" class="form-control zip" id="exampleFormControlInput1"/>
-                        </div>
+                            <div className="form-group">
+                                <label>Address Line 2 (optional)</label>
+                                <input type="text" className="form-input" />
+                            </div>
+
+                            <div className="form-row-triple">
+                                <div className="form-group">
+                                    <label>City</label>
+                                    <input type="text" className="form-input" />
+                                </div>
+                                <div className="form-group">
+                                    <label>State</label>
+                                    <input 
+                                        type="text" 
+                                        className="form-input" 
+                                        value="Illinois (IL)" 
+                                        disabled 
+                                        style={{ backgroundColor: '#f0f0f0', cursor: 'not-allowed' }}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>Zip</label>
+                                    <input type="text" className="form-input" />
+                                </div>
+                            </div>
+
+                            <div className="form-group">
+                                <label>Phone(optional)</label>
+                                <input type="tel" className="form-input" />
+                            </div>
+
+                            <button 
+                                type="button"
+                                className="continue-btn" 
+                                onClick={() => navigate("/checkout2")}
+                            >
+                                Continue to Payment
+                            </button>
+                        </form>
                     </div>
-                    <div class="mb-3">
-                        <label for="exampleFormControlInput1" class="form-label">Phone(optional)</label>
-                        <input type="number" class="form-control" id="exampleFormControlInput1"/>
-                    </div>
-                    <div class="mb-3">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
-                        <label class="form-check-label chk" for="flexCheckDefault">
-                            Receive SMS text message updates on my orders
-                        </label>
-                    </div>
-                    <div class="mb-3">
-                        <label for="exampleFormControlInput1" class="form-label">Email (We require your email to send
-                            you receipts and order updates)</label>
-                        <input type="email" class="form-control email" id="exampleFormControlInput1"/>
-                    </div>
-                    <hr/>
-                    <div class="mb-3">
-                        <div class="name mb-5">
-                            <label for="">TOTAL :${total}</label>
-                        </div>
-                        <button  onClick={()=>{navigate("/checkout2")}} class="btn btn-primary next" data-bs-toggle="modal"
-                            data-bs-target="#staticBackdrop">Next</button>
-                    </div>
-                </form>
-                <div>
-                    <h2 style={{textAlign:"center"}}>Total Items: {data.length}</h2>
-                    {
-                        data.map((elem)=>{
-                            return (
-                                <div  className = "checkoutList">
-                                    <div>
-                                        <img width="120px" src = {elem.image}  alt = {elem.name} />
+                </div>
+
+                <div className="cart-summary-section">
+                    <div className="summary-card">
+                        <h2>Order Summary</h2>
+                        <div className="summary-count">Total Items: {cartItems.length}</div>
+                        
+                        <div className="cart-items-list">
+                            {cartItems.map((item) => (
+                                <div key={item.id} className="checkout-cart-item">
+                                    <img 
+                                        src={item.image_url} 
+                                        alt={item.name}
+                                        className="item-image"
+                                    />
+                                    <div className="item-details">
+                                        <h4>{item.name}</h4>
+                                        <p className="item-qty">Qty: {item.quantity}</p>
                                     </div>
-                                    <div>
-                                        <h5>{elem.name}</h5>
-                                        <p>${elem.price}</p>
-                                        
-                                    </div>
-                                    <div style={{textAlign:"end"}}>
-                                        <p>quantity : <span style={{fontWeight:"bolder"}}>{elem.quantity}</span> </p>
+                                    <div className="item-price">
+                                        ${((parseFloat(item.price) || 0) * item.quantity).toFixed(2)}
                                     </div>
                                 </div>
-                            )
-                        })
-                    }
-                    <div style={{width:"60%",margin:"auto",padding:"20px ",borderBottom:"1 px solid rgb(193, 191, 191)",display:"flex",justifyContent:"space-between"}}>
-                        <h4>Subtotal: </h4>
-                        <h4>{total}</h4>
+                            ))}
+                        </div>
+
+                        <div className="summary-totals">
+                            <div className="summary-row">
+                                <span>Subtotal</span>
+                                <span>${subtotal.toFixed(2)}</span>
+                            </div>
+                            <div className="summary-row">
+                                <span>Estimated Shipping</span>
+                                <span>${shippingCost.toFixed(2)}</span>
+                            </div>
+                            <div className="summary-row">
+                                <span>Estimated Tax (10% IL)</span>
+                                <span>${taxAmount.toFixed(2)}</span>
+                            </div>
+                            <div className="summary-row total">
+                                <span>Total</span>
+                                <span>${totalAmount.toFixed(2)}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
