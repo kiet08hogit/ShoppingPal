@@ -3,7 +3,6 @@ import "../navbar/header.css";
 
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-import { Link } from "react-router-dom";
 
 import { useNavigate } from "react-router-dom";
 import { useUser, useClerk } from "@clerk/clerk-react";
@@ -15,7 +14,6 @@ import { useRef } from "react";export default function Navbar() {
   const [filteredData, setFilteredData] = useState([]);
   const [word, searchWord] = useState("")
 
-  const [data,setData] =useState([])
 
   useEffect(() => {
     const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
@@ -182,7 +180,7 @@ import { useRef } from "react";export default function Navbar() {
             aria-labelledby="offcanvasRightLabel"
           >
             <div className="offcanvas-header" >
-              <h5 className="offcanvas-title" id="offcanvasRightLabel"></h5>
+              <h5 className="offcanvas-title" id="offcanvasRightLabel">Menu</h5>
               <br />
 
               <button

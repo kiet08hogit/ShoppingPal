@@ -94,7 +94,8 @@ function Cart() {
                 cartItems.length==0? <EmptyCart />:<div style={{padding:"30px 0px",borderBottom:"1px solid rgb(160, 159, 159)",width:"50%",margin:"auto"}} >
                 <div className="subtotal">
                     {cartItems.map((elem) => {
-                        totalPrice += (elem.price || 0) * elem.quantity
+                        totalPrice += (elem.price || 0) * elem.quantity;
+                        return null;
                     })}
                     <p>Subtotal</p>
                     <p>${totalPrice}</p>
@@ -130,7 +131,7 @@ function Cart() {
                     </p>
                     <input value={input} onChange={(e)=>setInput(e.target.value)} style={{width:"100%",padding:"5px 0",fontSize:"25px"}} type="text" ></input><br></br>
                     <button onClick={()=>{
-                        if(input.length==6) navigate("/checkout")
+                        if(input.length===6) navigate("/checkout")
                         else{
                             alert("please enter a valid pincode")
                             setInput("")

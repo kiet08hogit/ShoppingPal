@@ -4,7 +4,7 @@ function EmptyCart(){
     const navigate = useNavigate()
     return(
         <div style={{textAlign:"center"}}>
-            <img style = {{width:"200px",border:"100px",marginBottom:"30px"}} src = "/images/empty-cart.png"/>
+            <img style = {{width:"200px",border:"100px",marginBottom:"30px"}} src = "/images/empty-cart.png" alt="Empty cart" />
             <p>Your cart is empty!</p>
             <p>Login to see what you already added</p>
             <button onClick={()=>{navigate("/products")}} style={{width:"300px",backgroundColor:"rgb(19, 80, 116)",color:"white",

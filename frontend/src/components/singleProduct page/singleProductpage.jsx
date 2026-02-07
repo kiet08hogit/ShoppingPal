@@ -2,7 +2,6 @@ import "./singleProductpage.css"
 import { FaStar } from 'react-icons/fa';
 import { FaStarHalf } from 'react-icons/fa';
 import { BiStoreAlt } from 'react-icons/bi';
-import { GrDeliver } from 'react-icons/gr';
 import { HiOutlineShoppingCart } from 'react-icons/hi';
 import { useEffect, useState } from "react";
 import Loading from "./loading";
@@ -37,8 +36,8 @@ function SingleProduct() {
                 console.log(data);
                 setLoading(false)
                 setObj(data)
-            })
-    }, [])
+                })
+            }, [id])
 
     const [availability,setAvailbility] =useState('')
 

@@ -10,7 +10,6 @@ const ProductPage = () => {
   let [category,setCategory] = useState("")
   let [price,setPrice] = useState(0)
   const products = useSelector((state) => state.product.products);
-  let n = products
   const dispatch = useDispatch();
   const fetchProducts = () => {
     const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
@@ -24,7 +23,7 @@ const ProductPage = () => {
   };
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [fetchProducts]);
 
   return (
     <><div id="filter-bar">
