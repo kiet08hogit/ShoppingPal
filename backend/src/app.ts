@@ -20,6 +20,8 @@ app.use(express.json());
 app.use('/auth', authRoutes);
 app.use('/products', allProductsRoutes);
 app.use('/cart', cartRoutes);
+import orderRoutes from './routes/order.route';
+app.use('/orders', orderRoutes);
 
 // Initialize DB
 initDB();

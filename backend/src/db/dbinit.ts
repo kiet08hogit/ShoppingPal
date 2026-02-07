@@ -24,6 +24,23 @@ export const initDB = async () => {
                 added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 UNIQUE(cart_id, product_id, category)
             );
+
+            CREATE TABLE IF NOT EXISTS orders (
+                id SERIAL PRIMARY KEY,
+                user_id INT REFERENCES users(id) ON DELETE CASCADE,
+                total_amount NUMERIC,
+                status VARCHAR(50) DEFAULT 'pending',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+
+            CREATE TABLE IF NOT EXISTS order_items (
+                id SERIAL PRIMARY KEY,
+                order_id INT REFERENCES orders(id) ON DELETE CASCADE,
+                product_id INT NOT NULL,
+                category VARCHAR(50) NOT NULL,
+                quantity INT NOT NULL,
+                price_at_purchase NUMERIC NOT NULL
+            );
         `);
         console.log("Database initialized successfully");
     } catch (error) {
