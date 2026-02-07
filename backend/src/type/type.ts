@@ -46,3 +46,24 @@ export interface Cart {
 	user_id: ID;
 	items: CartItem[];
 }
+
+export interface OrderItem {
+	id: ID;
+	order_id: ID;
+	product_id: ID;
+	category: string;
+	quantity: number;
+	price_at_purchase: number;
+	// Enriched fields
+	name?: string;
+	image_url?: string;
+}
+
+export interface Order {
+	id: ID;
+	user_id: ID;
+	total_amount: number;
+	status: string;
+	created_at: Date;
+	items: OrderItem[];
+}
