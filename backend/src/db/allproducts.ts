@@ -30,6 +30,14 @@ export const getProductById = async (category: string, id: string) => {
     return result.rows[0];
 }
 
+export const getAllProducts = async () => {
+    const tables = Object.values(allowedTables);
+    const queries = tables.map(table => `SELECT * FROM ${table}`);
+    const finalQuery = queries.join(' UNION ALL ');
+    const result = await pool.query(finalQuery);
+    return result.rows;
+}
+
 export const searchProducts = async (searchQuery: string) => {
     const tables = Object.values(allowedTables);
     // Construct a UNION ALL query to search across all tables

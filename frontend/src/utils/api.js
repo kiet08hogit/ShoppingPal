@@ -26,10 +26,17 @@ export const userAPI = {
 
 export const cartAPI = {
   getCart: () => api.get('/cart'),
-  addToCart: (productId, quantity) => api.post('/cart/add', { productId, quantity }),
+  addToCart: (productId, category, quantity) => api.post('/cart/add', { productId, category, quantity }),
   updateQuantity: (productId, quantity) => api.put(`/cart/update/${productId}`, { quantity }),
   removeFromCart: (productId) => api.delete(`/cart/remove/${productId}`),
   clearCart: () => api.delete('/cart/clear'),
+};
+
+export const productsAPI = {
+  getAllProducts: () => api.get('/products'),
+  getProductsByCategory: (category) => api.get(`/products/category/${category}`),
+  getProductById: (category, id) => api.get(`/products/category/${category}/${id}`),
+  searchProducts: (query) => api.get(`/products/search?q=${query}`),
 };
 
 export default api;

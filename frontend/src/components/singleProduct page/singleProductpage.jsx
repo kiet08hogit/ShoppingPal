@@ -17,27 +17,34 @@ function SingleProduct() {
     let [addingToCart, setAddingToCart] = useState(false)
     let navigate = useNavigate()
 
-    const { id } = useParams()
+    const { id, category } = useParams()
     const [obj, setObj] = useState({
-        mainImageUrl: "",
-        contextualImageUrl: "",
-        typeName: "",
-        imageAlt: "",
+        id: null,
         name: "",
-        salesPrice: "",
+        brand: "",
+        category: "",
+        main_category: "",
+        price: "0",
+        image_url: "",
+        description: "",
+        specifications: {},
     })
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
-        fetch(`${apiUrl}/products/${id}`)
+        fetch(`${apiUrl}/products/category/${category}/${id}`)
             .then((res) => res.json())
             .then((data) => {
                 console.log(data);
                 setLoading(false)
                 setObj(data)
                 })
-            }, [id])
+            .catch((error) => {
+                console.error('Error fetching product:', error);
+                setLoading(false);
+            })
+            }, [id, category])
 
     const [availability,setAvailbility] =useState('')
 
@@ -51,7 +58,8 @@ console.log(availability);
         
         setAddingToCart(true);
         try {
-            await cartAPI.addToCart(obj.id, 1);
+            // Determine category slug from the URL params
+            await cartAPI.addToCart(obj.id, category, 1);
             setAvail(false);
         } catch (error) {
             console.error('Error adding to cart:', error);
@@ -66,33 +74,45 @@ console.log(availability);
         <>
             {loading ? <Loading /> :
                 <div className="Parent1">
-                    <p style={{ color: "gray", fontSize: "14px" }}>Products {">"} Furniture {">"} {obj.typeName} {">"} {obj.imageAlt} </p>
+                    <p style={{ color: "gray", fontSize: "14px" }}>Products {">"} {obj.main_category} {">"} {obj.category} {">"} {obj.name} </p>
                     <div className="Container1">
                         <div>
                             <div className="productImg1">
-                                <img src={obj.mainImageUrl} alt={obj.imageAlt} />
-                                <img src={obj.contextualImageUrl} alt={obj.imageAlt} />
+                                <img src={obj.image_url || "/images/placeholder.jpg"} alt={obj.category} />
+                                <img src={obj.image_url || "/images/placeholder.jpg"} alt={obj.category} />
                             </div>
-                            <div className="about1">{obj.about}</div>
+                            <div className="about1">{obj.description}</div>
                         </div>
 
                         <div>
                             <h3 style={{ margin: "0px" }}>{obj.name}</h3>
-                            <p style={{ marginTop: "5px", marginBottom: "5px" }}>{obj.typeName}</p>
+                            <p style={{ marginTop: "5px", marginBottom: "5px" }}>{obj.category}</p>
+                            {obj.brand && <p style={{ fontSize: "14px", color: "gray" }}>Brand: {obj.brand}</p>}
 
-                            <h3>$ <span style={{ fontSize: "30px", fontWeight: "bolder" }}>{Math.trunc(obj.salesPrice.numeral) * 100 - 1}</span></h3>
+                            <h3>$ <span style={{ fontSize: "30px", fontWeight: "bolder" }}>{parseFloat(obj.price).toFixed(2)}</span></h3>
                             <p style={{ marginTop: "-10px", fontSize: "13px", color: "rgb(94, 94, 94)" }}>Price incl. of all taxes</p>
-                            <p style={{ marginTop: "-10px", fontSize: "13px", color: "rgb(94, 94, 94)gray" }}>Price valid Dec 15 - Jan 15 or while supply lasts</p>
+                            <p style={{ marginTop: "-10px", fontSize: "13px", color: "rgb(94, 94, 94)" }}>Price valid Dec 15 - Jan 15 or while supply lasts</p>
+                            
+                            {obj.specifications?.availability && (
+                                <p style={{ fontSize: "13px", color: "orange", fontWeight: "bold" }}>{obj.specifications.availability}</p>
+                            )}
+                            
                             <span>
                                 <div className="abc1">
-                                    <p>
-                                        <FaStar />
-                                        <FaStar />
-                                        <FaStar />
-                                        <FaStar />
-                                        <FaStarHalf />
-                                    </p>
-                                    <p style={{ fontSize: "13px" }}>(142)</p>
+                                    {obj.specifications?.rating && obj.specifications.rating !== "N/A" ? (
+                                        <p>
+                                            <FaStar />
+                                            <FaStar />
+                                            <FaStar />
+                                            <FaStar />
+                                            <FaStarHalf />
+                                        </p>
+                                    ) : (
+                                        <p style={{ fontSize: "13px" }}>No ratings yet</p>
+                                    )}
+                                    {obj.specifications?.reviews && obj.specifications.reviews !== "N/A" && (
+                                        <p style={{ fontSize: "13px" }}>({obj.specifications.reviews})</p>
+                                    )}
                                 </div>
                             </span>
                             <h4>How to get it</h4>
@@ -118,7 +138,7 @@ console.log(availability);
                                         
 
                                         <div style={{ color: "white", backgroundColor: "rgb(19, 80, 116)" }} class="modal-body">
-                                            <h3 style={{}}>{isauth?(!avail ? obj.typeName + " Added to Cart" : "Item already added"):"You have to Login first"}</h3>
+                                            <h3 style={{}}>{isauth?(!avail ? obj.name + " Added to Cart" : "Item already added"):"You have to Login first"}</h3>
                                         </div>
                                         <div class="modal-footer">
                                             <button onClick={()=>{isauth ?  navigate("/cart"):navigate("/login")}} type="button" data-bs-dismiss="modal" class="btn btn-primary">{isauth?"Go to cart":"login"}</button>

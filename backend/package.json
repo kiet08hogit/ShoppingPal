@@ -7,7 +7,8 @@
     "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
     "build": "tsc",
     "start": "node dist/app.js",
-    "import-data": "ts-node scripts/importData.ts"
+    "import-data": "ts-node scripts/importData.ts",
+    "update-images": "ts-node scripts/updateProductImages.ts"
   },
   "keywords": [],
   "author": "",

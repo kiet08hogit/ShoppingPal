@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { getProductById, getProductsByCategory, searchProducts } from '../db/allproducts';
+import { getProductById, getProductsByCategory, searchProducts, getAllProducts } from '../db/allproducts';
 
 
 
@@ -30,6 +30,16 @@ export const getProductByIdcontroller = async (req: Request<{ category: string, 
     } catch (error: any) {
         console.error("Error fetching product:", error);
         return res.status(400).json({ error: error.message || "Bad Request" });
+    }
+};
+
+export const getAllProductsController = async (req: Request, res: Response) => {
+    try {
+        const products = await getAllProducts();
+        return res.status(200).json(products);
+    } catch (error: any) {
+        console.error("Error fetching all products:", error);
+        return res.status(500).json({ error: "Internal Server Error" });
     }
 };
 
