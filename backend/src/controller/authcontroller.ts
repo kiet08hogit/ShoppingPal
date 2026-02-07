@@ -6,9 +6,6 @@ import { comparePassword } from "../utils/password";
 import dotenv from "dotenv";
 dotenv.config();
 
-
-
-
 export const register = async (req: Request, res: Response): Promise<any> => {
     const { email, password, retype_password }: { email: string, password: string, retype_password: string } = req.body;
 
@@ -100,15 +97,7 @@ export const getMe = async (req: Request | any, res: Response): Promise<any> => 
             [email]
         );
 
-        if (user.rows.length === 0) {
-            return res.status(404).json({ error: "User not found" });
-        }
-
-        res.json({
-            message: "User verified",
-            user: user.rows[0]
-        });
-
+        res.json({ user: user.rows[0] });
     } catch (error: any) {
         console.error("GetMe Error:", error);
         res.status(500).json({ error: "Internal server error" });
